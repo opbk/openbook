@@ -1,0 +1,36 @@
+DAEMON=/usr/lib/openbook/frontend
+PIDFILE=/var/run/openbook-frontend.pid
+
+case "$1" in
+  start)
+    echo "Starting server"
+    /sbin/start-stop-daemon --start --pidfile $PIDFILE \
+        --user openbook --group openbook \
+        -b --make-pidfile \
+        --chuid openbook \
+        --exec $DAEMON
+    ;;
+  stop)
+    echo "Stopping server"
+    /sbin/start-stop-daemon --stop --pidfile $PIDFILE --verbose
+    ;;
+  restart)
+    echo "Restarting server"
+    /sbin/start-stop-daemon --stop --pidfile $PIDFILE --verbose
+    echo "Starting server"
+    /sbin/start-stop-daemon --start --pidfile $PIDFILE \
+        --user openbook --group openbook \
+        -b --make-pidfile \
+        --chuid openbook \
+        --exec $DAEMON
+    ;;
+  force-reload)
+    echo "Not implemented"
+    ;;
+  *)
+    echo "Usage: /etc/init.d/openbook-frontend {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0

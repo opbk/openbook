@@ -1,0 +1,16 @@
+[db]
+driver     = postgres
+connection = postgres://developer:developer@localhost/newsgun
+
+[frontend]
+httpport       = 8089
+templatepath   = resources/frontend/templates/
+
+[backend]
+httpport = 8090
+templatepath   = resources/backend/templates/
+
+[main]
+senddelay = 0.1s
+logfile = seelog.xml
+maxproc = 8
