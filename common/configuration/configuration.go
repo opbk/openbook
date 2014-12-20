@@ -36,7 +36,7 @@ type Config struct {
 const defaultConfig = `
 [db]
 driver     = postgres
-connection = postgres://developer:developer@localhost/newsgun
+connection = postgres://developer:developer@localhost/openbook
 
 [frontend]
 httpport       = 8089
