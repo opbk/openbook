@@ -13,6 +13,7 @@ github.com/gorilla/mux \
 github.com/gorilla/sessions \
 github.com/gorilla/securecookie \
 gopkg.in/check.v1 \
+github.com/streadway/amqp \
 github.com/cihub/seelog \
 github.com/mattes/migrate \
 
@@ -57,10 +58,10 @@ test:
 	$(GO) test $(PROJECT)/backend
 
 migrate_up:
-	migrate -url postgres://developer:developer@localhost/openbook -path ./migrations/postgresql up
+	-migrate -url postgres://developer:developer@localhost/openbook -path ./migrations/postgresql up
 
 migrate_down:
-	migrate -url postgres://developer:developer@localhost/openbook -path ./migrations/postgresql down
+	-migrate -url postgres://developer:developer@localhost/openbook -path ./migrations/postgresql down
 
 migrate: migrate_down migrate_up
 
