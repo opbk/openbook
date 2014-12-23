@@ -1,25 +1,27 @@
 package webtest
 
 import (
-	"git.2rll.net/openbook/common/model/user"
-	"git.2rll.net/openbook/common/web/auth"
-	"github.com/gorilla/mux"
-	"gopkg.in/check.v1"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
+
+	"github.com/gorilla/mux"
+	"gopkg.in/check.v1"
+
+	// "github.com/opbk/openbook/common/model/user"
+	// "github.com/opbk/openbook/common/web/auth"
 )
 
 type ControllerTestSuit struct {
-	server      *httptest.Server
-	authWrapper *AuthWrapper
-	c           *check.C
+	server *httptest.Server
+	//authWrapper *AuthWrapper
+	c *check.C
 }
 
 func (s *ControllerTestSuit) SetUpSuite(c *check.C, router *mux.Router) {
-	s.authWrapper = NewAuthWrapper(router)
-	s.server = httptest.NewServer(s.authWrapper)
+	//s.authWrapper = NewAuthWrapper(router)
+	s.server = httptest.NewServer(router)
 	s.c = c
 }
 
@@ -27,9 +29,9 @@ func (s *ControllerTestSuit) TearDownSuite(c *check.C) {
 	s.server.Close()
 }
 
-func (s *ControllerTestSuit) WithUser(u *user.User) {
-	s.authWrapper.WithUser(u)
-}
+// func (s *ControllerTestSuit) WithUser(u *user.User) {
+// 	s.authWrapper.WithUser(u)
+// }
 
 func (s *ControllerTestSuit) Get(url string) (string, *http.Response) {
 	res, err := http.Get(s.server.URL + url)
@@ -77,24 +79,24 @@ func (s *ControllerTestSuit) Delete(url string) (string, *http.Response) {
 	return string(result), res
 }
 
-type AuthWrapper struct {
-	router *mux.Router
-	user   *user.User
-}
+// type AuthWrapper struct {
+// 	router *mux.Router
+// 	user   *user.User
+// }
 
-func NewAuthWrapper(router *mux.Router) *AuthWrapper {
-	return &AuthWrapper{router: router}
-}
+// func NewAuthWrapper(router *mux.Router) *AuthWrapper {
+// 	return &AuthWrapper{router: router}
+// }
 
-func (w *AuthWrapper) WithUser(u *user.User) {
-	w.user = u
-}
+// func (w *AuthWrapper) WithUser(u *user.User) {
+// 	w.user = u
+// }
 
-func (w *AuthWrapper) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	if w.user != nil {
-		auth.Set(w.user, rw, req)
-	}
+// func (w *AuthWrapper) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+// 	if w.user != nil {
+// 		auth.Set(w.user, rw, req)
+// 	}
 
-	w.router.ServeHTTP(rw, req)
-	w.user = nil
-}
+// 	w.router.ServeHTTP(rw, req)
+// 	w.user = nil
+// }
