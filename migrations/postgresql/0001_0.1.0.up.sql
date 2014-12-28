@@ -12,8 +12,11 @@ CREATE TABLE books (
 	id INTEGER NOT NULL PRIMARY KEY DEFAULT nextval('auto_id_books'),
 	title CHARACTER VARYING (500) NOT NULL,
 	description TEXT,
-	release DATE
+	release DATE,
+	created TIMESTAMP
 );
+
+CREATE INDEX books_r_idx on books (release);
 
 -- category tables -- 
 CREATE TABLE book_categories (
@@ -27,6 +30,7 @@ CREATE SEQUENCE auto_id_categories;
 CREATE TABLE categories (
 	id INTEGER NOT NULL PRIMARY KEY DEFAULT nextval('auto_id_categories'),
 	category_id INTEGER NOT NULL DEFAULT 0,
+	path TEXT,
 	name CHARACTER VARYING (250) NOT NULL
 );
 CREATE INDEX categories_cid_idx ON categories (category_id);
