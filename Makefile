@@ -16,6 +16,7 @@ gopkg.in/check.v1 \
 github.com/streadway/amqp \
 github.com/cihub/seelog \
 github.com/mattes/migrate \
+github.com/jmoiron/sqlx \
 
 dependencies_paths := $(addprefix $(GOPATH)/src/,$(dependencies))
 $(dependencies_paths):
