@@ -3,8 +3,10 @@ package book
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 
 	logger "github.com/cihub/seelog"
+	"github.com/opbk/openbook/common/arrays"
 	"github.com/opbk/openbook/common/db"
 )
 
@@ -23,7 +25,7 @@ const (
 	SEARCH_JOIN_CATEGORY = " LEFT JOIN book_categories  as bc ON id = bc.book_id"
 	SEARCH_JOIN_AUTHOR   = " LEFT JOIN author_books as ab ON id = ab.book_id"
 
-	SEARCH_WHERE_CATEGORY = " category_id = %d and "
+	SEARCH_WHERE_CATEGORY = " category_id IN (%s) and "
 	SEARCH_WHERE_AUTHOR   = " author_id = %d and "
 	SEARCH_WHERE_RELEASE  = " release > '%s' and "
 )
@@ -55,9 +57,9 @@ func Search(search map[string]interface{}, limit, offset int) []*Book {
 	var join string
 	var where string
 
-	if _, ok := search["category"]; ok {
+	if _, ok := search["categories"]; ok {
 		join += SEARCH_JOIN_CATEGORY
-		where += fmt.Sprintf(SEARCH_WHERE_CATEGORY, search["category"])
+		where += fmt.Sprintf(SEARCH_WHERE_CATEGORY, strings.Join(arrays.Int64ToString(search["categories"].([]int64)), ","))
 	}
 
 	if _, ok := search["author"]; ok {

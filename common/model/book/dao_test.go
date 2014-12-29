@@ -76,7 +76,7 @@ func (s *TestSuit) TestSearchEmptyWithLimitAndOffset(c *check.C) {
 }
 
 func (s *TestSuit) TestSearchOnlyWithCategory(c *check.C) {
-	books := Search(map[string]interface{}{"category": 1}, 20, 0)
+	books := Search(map[string]interface{}{"categories": []int64{1}}, 20, 0)
 	c.Assert(len(books), check.Equals, 3)
 	c.Assert(books[0].Id, check.Equals, int64(4))
 	c.Assert(books[1].Id, check.Equals, int64(2))
@@ -91,7 +91,7 @@ func (s *TestSuit) TestSearchOnlyWithAuthor(c *check.C) {
 }
 
 func (s *TestSuit) TestSearchWithAuthorAndCategory(c *check.C) {
-	books := Search(map[string]interface{}{"category": 1, "author": 3}, 20, 0)
+	books := Search(map[string]interface{}{"categories": []int64{1}, "author": 3}, 20, 0)
 	c.Assert(len(books), check.Equals, 1)
 	c.Assert(books[0].Id, check.Equals, int64(4))
 }
@@ -104,7 +104,7 @@ func (s *TestSuit) TestSearchOnlyWithRealeas(c *check.C) {
 }
 
 func (s *TestSuit) TestSearchWithAuthorAndCategoryAndRelease(c *check.C) {
-	books := Search(map[string]interface{}{"category": 1, "author": 1, "release": "2014-01-01"}, 20, 0)
+	books := Search(map[string]interface{}{"categories": []int64{1}, "author": 1, "release": "2014-01-01"}, 20, 0)
 	c.Assert(len(books), check.Equals, 1)
 	c.Assert(books[0].Id, check.Equals, int64(2))
 }
