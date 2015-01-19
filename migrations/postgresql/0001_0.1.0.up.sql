@@ -29,11 +29,12 @@ CREATE INDEX book_categories_cid_idx on book_categories (category_id);
 CREATE SEQUENCE auto_id_categories;
 CREATE TABLE categories (
 	id INTEGER NOT NULL PRIMARY KEY DEFAULT nextval('auto_id_categories'),
-	category_id INTEGER NOT NULL DEFAULT 0,
+	parent_id INTEGER NOT NULL DEFAULT 0,
 	path TEXT,
-	name CHARACTER VARYING (250) NOT NULL
+	name CHARACTER VARYING (250) NOT NULL,
+	books INTEGER
 );
-CREATE INDEX categories_cid_idx ON categories (category_id);
+CREATE INDEX categories_cid_idx ON categories (id);
 
 -- author tables --
 CREATE TABLE author_books (
