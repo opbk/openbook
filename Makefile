@@ -17,6 +17,7 @@ github.com/streadway/amqp \
 github.com/cihub/seelog \
 github.com/mattes/migrate \
 github.com/jmoiron/sqlx \
+github.com/astaxie/beego/orm \
 
 dependencies_paths := $(addprefix $(GOPATH)/src/,$(dependencies))
 $(dependencies_paths):
@@ -34,19 +35,18 @@ build_backend: dependencies
 	cp resources/config.gcfg $(BUILD_DIR)/backend/etc/openbook/backend/config.gcfg
 	cp resources/seelog.xml $(BUILD_DIR)/backend/etc/openbook/backend/seelog.xml
 	cp -r deb/backend/* $(BUILD_DIR)/backend/
-	fakeroot dpkg-deb --build build backend_$(VERSION)_amd64.deb
 
 build_frontend: dependencies
 	rm -rf $(BUILD_DIR)/frontend
 	$(GO) build -o $(BUILD_DIR)/frontend/usr/lib/openbook/frontend/frontend $(PROJECT)/frontend
-	mkdir -p $(BUILD_DIR)/frontend/usr/lib/openbook/frontend/templates
+	mkdir -p $(BUILD_DIR)/frontend/var/lib/openbook/frontend
 	mkdir -p $(BUILD_DIR)/frontend/etc/openbook/frontend/
 	mkdir -p $(BUILD_DIR)/frontend/etc/init.d/
-	cp -r resources/frontend/templates $(BUILD_DIR)/frontend/usr/lib/openbook/frontend/templates
+	cp -r resources/frontend/templates $(BUILD_DIR)/frontend/usr/lib/openbook/frontend
+	cp -r resources/frontend/static $(BUILD_DIR)/frontend/usr/lib/openbook/frontend
 	cp resources/config.gcfg $(BUILD_DIR)/frontend/etc/openbook/frontend/config.gcfg
 	cp resources/seelog.xml $(BUILD_DIR)/frontend/etc/openbook/frontend/seelog.xml
 	cp -r deb/frontend/* $(BUILD_DIR)/frontend/
-	fakeroot dpkg-deb --build build frontend_$(VERSION)_amd64.deb
 
 build: build_backend build_frontend
 
@@ -55,6 +55,11 @@ deb: clear_deb
 	fakeroot dpkg-deb --build build/frontend frontend_$(VERSION)_amd64.deb
 
 test: 
+	$(GO) test $(PROJECT)/common/model/book
+	$(GO) test $(PROJECT)/common/model/book/category
+	$(GO) test $(PROJECT)/common/model/author
+	$(GO) test $(PROJECT)/common/model/publisher
+	$(GO) test $(PROJECT)/common/model/user
 	$(GO) test $(PROJECT)/frontend
 	$(GO) test $(PROJECT)/backend
 

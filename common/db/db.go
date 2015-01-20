@@ -2,9 +2,12 @@ package db
 
 import (
 	"database/sql"
+	"encoding/json"
+	"log"
+	"strings"
+
 	_ "github.com/lib/pq"
 	"github.com/lib/pq/hstore"
-	"log"
 )
 
 var connection *sql.DB
@@ -39,4 +42,16 @@ func MapToHstore(mp map[string]string) hstore.Hstore {
 	}
 
 	return hs
+}
+
+func StringToArray(input string) []int64 {
+	input = strings.Replace(input, "{", "[", -1)
+	input = strings.Replace(input, "}", "]", -1)
+	var result []int64
+	json.Unmarshal([]byte(input), &result)
+	return result
+}
+
+type RowScanner interface {
+	Scan(dest ...interface{}) error
 }

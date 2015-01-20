@@ -7,45 +7,74 @@ import (
 	"strconv"
 )
 
-type request struct {
+type Request struct {
 	req    *http.Request
 	params map[string]string
 }
 
-func NewRequest(req *http.Request) *request {
-	return &request{req, mux.Vars(req)}
+func NewRequest(req *http.Request) *Request {
+	return &Request{req, mux.Vars(req)}
 }
 
-func (r *request) GetInt64(name string, def ...int64) int64 {
+func (r *Request) GetInt64(name string, def ...int64) int64 {
 	value, ok := r.params[name]
 	if ok {
 		intValue, _ := strconv.ParseInt(value, 10, 64)
 		return intValue
 	}
 
-	return def[0]
+	value = r.req.FormValue(name)
+	if value != "" {
+		intValue, _ := strconv.ParseInt(value, 10, 64)
+		return intValue
+	}
+
+	if len(def) > 0 {
+		return def[0]
+	}
+
+	return int64(0)
 }
 
-func (r *request) GetInt(name string, def ...int) int {
+func (r *Request) GetInt(name string, def ...int) int {
 	value, ok := r.params[name]
 	if ok {
 		intValue, _ := strconv.Atoi(value)
 		return intValue
 	}
 
-	return def[0]
+	value = r.req.FormValue(name)
+	if value != "" {
+		intValue, _ := strconv.Atoi(value)
+		return intValue
+	}
+
+	if len(def) > 0 {
+		return def[0]
+	}
+
+	return 0
 }
 
-func (r *request) GetString(name string, def ...string) string {
+func (r *Request) GetString(name string, def ...string) string {
 	value, ok := r.params[name]
 	if ok {
 		return value
 	}
 
-	return def[0]
+	value = r.req.FormValue(name)
+	if value != "" {
+		return value
+	}
+
+	if len(def) > 0 {
+		return def[0]
+	}
+
+	return ""
 }
 
-func (r *request) GetObject(t ...interface{}) error {
+func (r *Request) GetObject(t ...interface{}) error {
 	if len(t) > 1 {
 		if param, ok := r.params[t[0].(string)]; ok {
 			data := []byte(param)
@@ -62,6 +91,6 @@ func (r *request) GetObject(t ...interface{}) error {
 	return decoder.Decode(t[0])
 }
 
-func (r *request) GetObjectFromFile(name, t interface{}) {
+func (r *Request) GetObjectFromFile(name, t interface{}) {
 
 }

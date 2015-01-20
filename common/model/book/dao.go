@@ -3,44 +3,59 @@ package book
 import (
 	"database/sql"
 	"fmt"
-	"strings"
 
 	logger "github.com/cihub/seelog"
-	"github.com/opbk/openbook/common/arrays"
 	"github.com/opbk/openbook/common/db"
 )
 
 const (
-	FIND                 = "SELECT id, title, description, release, created FROM books WHERE id = $1"
-	LIST                 = "SELECT id, title, description, release, created FROM books LIMIT $1 OFFSET $2"
-	INSERT               = "INSERT INTO books(title, description, release, created) VALUES ($1, $2, $3, $4) RETURNING id"
-	UPDATE               = "UPDATE books SET title = $1, description = $2, release = $3, release = $4 WHERE id = $5"
+	FIND                 = "SELECT id, title, pages, language, description, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id WHERE id = $1 GROUP BY id"
+	LIST                 = "SELECT id, title, pages, language, description, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id GROUP BY id LIMIT $1 OFFSET $2"
+	INSERT               = "INSERT INTO books(title, pages, language, description, release, created, series_id, publisher_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id"
+	UPDATE               = "UPDATE books SET title = $1, pages = $2, language = $3, description = $4, release = $5, release = $6, series_id = $7, publisher_id = $8 WHERE id = $9"
 	DELETE               = "DELETE FROM books WHERE id = $1"
 	ADD_BOOK_TO_CATEGORY = "INSERT INTO book_categories (book_id, category_id) VALUES ($1, $2)"
 	ADD_BOOK_TO_AUTHOR   = "INSERT INTO author_books (book_id, author_id) VALUES ($1, $2)"
 )
 
 const (
-	SEARCH               = "SELECT id, title, description, release, created FROM books %s WHERE %s 1 = 1 ORDER BY created DESC LIMIT $1 OFFSET $2"
-	SEARCH_JOIN_CATEGORY = " LEFT JOIN book_categories  as bc ON id = bc.book_id"
-	SEARCH_JOIN_AUTHOR   = " LEFT JOIN author_books as ab ON id = ab.book_id"
-
-	SEARCH_WHERE_CATEGORY = " category_id IN (%s) and "
-	SEARCH_WHERE_AUTHOR   = " author_id = %d and "
-	SEARCH_WHERE_RELEASE  = " release > '%s' and "
+	SEARCH       = "SELECT id, title, pages, language, description, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id WHERE %s 1 = 1 GROUP BY id  ORDER BY created DESC LIMIT $1 OFFSET $2"
+	SEARCH_COUNT = "SELECT COUNT(DISTINCT id) FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id WHERE %s 1 = 1"
 )
+
+var searchWhere = map[string]string{
+	"category":  " category_id = %d and ",
+	"author":    " author_id = %d and ",
+	"release":   " release > '%s' and ",
+	"series":    " series_id = %d and ",
+	"publisher": " publisher_id = %d and ",
+	"search":    " title LIKE '%%%s%%' and ",
+}
 
 func connection() *sql.DB {
 	return db.Connection()
 }
 
+func scanRow(scaner db.RowScanner) *Book {
+	var book *Book = new(Book)
+	var categories string
+	var authors string
+	err := scaner.Scan(&book.Id, &book.Title, &book.Pages, &book.Language, &book.Description, &book.Release, &book.Created, &book.SeriesId, &book.PublisherId, &authors, &categories)
+	if err != nil {
+		logger.Errorf("Can't scan row: %s", err)
+	}
+
+	book.CategoriesId = db.StringToArray(categories)
+	book.AuthorsId = db.StringToArray(authors)
+	return book
+}
+
 func interateRows(rows *sql.Rows) []*Book {
 	books := make([]*Book, 0)
 	for rows.Next() {
-		var book *Book = new(Book)
-		rows.Scan(&book.Id, &book.Title, &book.Description, &book.Release, &book.Created)
-		books = append(books, book)
+		books = append(books, scanRow(rows))
 	}
+
 	return books
 }
 
@@ -53,43 +68,39 @@ func List(limit, offset int) []*Book {
 	return interateRows(rows)
 }
 
-func Search(search map[string]interface{}, limit, offset int) []*Book {
-	var join string
+func Search(filter map[string]interface{}, limit, offset int) []*Book {
 	var where string
-
-	if _, ok := search["categories"]; ok {
-		join += SEARCH_JOIN_CATEGORY
-		where += fmt.Sprintf(SEARCH_WHERE_CATEGORY, strings.Join(arrays.Int64ToString(search["categories"].([]int64)), ","))
+	for key, val := range filter {
+		where += fmt.Sprintf(searchWhere[key], val)
 	}
 
-	if _, ok := search["author"]; ok {
-		join += SEARCH_JOIN_AUTHOR
-		where += fmt.Sprintf(SEARCH_WHERE_AUTHOR, search["author"])
-	}
-
-	if _, ok := search["release"]; ok {
-		where += fmt.Sprintf(SEARCH_WHERE_RELEASE, search["release"])
-	}
-
-	rows, err := connection().Query(fmt.Sprintf(SEARCH, join, where), limit, offset)
+	rows, err := connection().Query(fmt.Sprintf(SEARCH, where), limit, offset)
 	if err != nil {
-		logger.Errorf("Database error while getting list of books: %s", err)
+		logger.Errorf("Database error while searching list of books: %s", err)
 	}
 
 	return interateRows(rows)
 }
 
-func Find(id int64) *Book {
-	var book *Book = new(Book)
-	row := connection().QueryRow(FIND, id)
-	err := row.Scan(&book.Id, &book.Title, &book.Description, &book.Release, &book.Created)
-
-	if err != nil {
-		logger.Errorf("Database error while finding book %d: %s", id, err)
-		return nil
+func SearchCount(filter map[string]interface{}) int {
+	var where string
+	for key, val := range filter {
+		where += fmt.Sprintf(searchWhere[key], val)
 	}
 
-	return book
+	var count int
+	row := connection().QueryRow(fmt.Sprintf(SEARCH_COUNT, where))
+	err := row.Scan(&count)
+	if err != nil {
+		logger.Errorf("Database error while getting count of books: %s", err)
+	}
+
+	return count
+}
+
+func Find(id int64) *Book {
+	row := connection().QueryRow(FIND, id)
+	return scanRow(row)
 }
 
 func AddBookToCategory(bookId, categoryId int64) {
@@ -115,14 +126,14 @@ func (b *Book) Save() {
 }
 
 func (b *Book) update() {
-	_, err := connection().Exec(UPDATE, b.Title, b.Description, b.Release, b.Created, b.Id)
+	_, err := connection().Exec(UPDATE, b.Title, b.Pages, b.Language, b.Description, b.Release, b.Created, b.SeriesId, b.PublisherId, b.Id)
 	if err != nil {
 		logger.Errorf("Database error while updating book %d: %s", b.Id, err)
 	}
 }
 
 func (b *Book) insert() {
-	err := connection().QueryRow(INSERT, b.Title, b.Description, b.Release, b.Created).Scan(&b.Id)
+	err := connection().QueryRow(INSERT, b.Title, b.Pages, b.Language, b.Description, b.Release, b.Created, b.SeriesId, b.PublisherId).Scan(&b.Id)
 	if err != nil {
 		logger.Errorf("Database error while inserting book: %s", err)
 	}

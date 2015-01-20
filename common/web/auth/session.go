@@ -1,11 +1,13 @@
 package auth
 
 import (
-	"git.2rll.net/openbook/common/model/user"
+	"net/http"
+
 	"github.com/gorilla/context"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
-	"net/http"
+
+	"github.com/opbk/openbook/common/model/user"
 )
 
 var store = sessions.NewCookieStore(securecookie.GenerateRandomKey(64), securecookie.GenerateRandomKey(32))

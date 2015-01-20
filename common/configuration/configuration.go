@@ -8,6 +8,8 @@ import (
 type Frontend struct {
 	HttpPort     string
 	TemplatePath string
+	StaticPath   string
+	UploadPath   string
 }
 
 type Backend struct {
@@ -36,15 +38,17 @@ type Config struct {
 const defaultConfig = `
 [db]
 driver     = postgres
-connection = postgres://postgres:passwordgfhjkm@localhost/opbook?ssl=false‏
+connection = postgres://developer:developer@localhost/openbook
 
 [frontend]
-httpport       = 8089
-templatepath   = resources/frontend/templates/
+httpport     = 8089
+templatepath = resources/frontend/templates/
+staticpath   = resources/frontend/static/
+uploadpath   = resources/frontend/templates/
 
 [backend]
-httpport = 8090
-templatepath   = resources/backend/templates/
+httpport     = 8090
+templatepath = resources/backend/templates/
 
 [main]
 senddelay = 0.1s

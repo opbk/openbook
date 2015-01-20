@@ -44,6 +44,23 @@ func List(limit, offset int) []*Category {
 	return interateRows(rows)
 }
 
+func ListChildCategories(id int64) []*Category {
+	rows, err := connection().Query(FIND_CHILD_CATEGORIES, id)
+	if err != nil {
+		logger.Errorf("Database error while getting list of child categories: %s", err)
+	}
+	return interateRows(rows)
+}
+
+func Search(filter map[string]interface{}) []*Category {
+	id, ok := filter["category"]
+	if ok {
+		return ListChildCategories(id.(int64))
+	}
+
+	return ListChildCategories(0)
+}
+
 func Find(id int64) *Category {
 	var category *Category = new(Category)
 	row := connection().QueryRow(FIND, id)
@@ -113,10 +130,5 @@ func parsePath(path string) []int64 {
 }
 
 func (c *Category) GetChildCategories() []*Category {
-
-	rows, err := connection().Query(FIND_CHILD_CATEGORIES, c.Id)
-	if err != nil {
-		logger.Errorf("Database error while getting list of child categories: %s", err)
-	}
-	return interateRows(rows)
+	return ListChildCategories(c.Id)
 }

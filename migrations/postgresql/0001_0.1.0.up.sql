@@ -10,13 +10,26 @@ $$ language 'plpgsql';
 CREATE SEQUENCE auto_id_books;
 CREATE TABLE books (
 	id INTEGER NOT NULL PRIMARY KEY DEFAULT nextval('auto_id_books'),
+	series_id INTEGER,
+	publisher_id INTEGER,
 	title CHARACTER VARYING (500) NOT NULL,
+	pages INTEGER,
+	language CHARACTER VARYING (5) NOT NULL DEFAULT 'ru',
 	description TEXT,
+	service_review TEXT,
+	critics_review TEXT,
 	release DATE,
 	created TIMESTAMP
 );
-
 CREATE INDEX books_r_idx on books (release);
+
+-- series table --
+CREATE SEQUENCE auto_id_series;
+CREATE TABLE series (
+	id INTEGER NOT NULL PRIMARY KEY DEFAULT nextval('auto_id_series'),
+	name CHARACTER VARYING (500) NOT NULL,
+	description TEXT
+);
 
 -- category tables -- 
 CREATE TABLE book_categories (
@@ -32,9 +45,9 @@ CREATE TABLE categories (
 	parent_id INTEGER NOT NULL DEFAULT 0,
 	path TEXT,
 	name CHARACTER VARYING (250) NOT NULL,
-	books INTEGER
+	books INTEGER NOT NULL DEFAULT 0
 );
-CREATE INDEX categories_cid_idx ON categories (id);
+CREATE INDEX categories_cid_idx ON categories (parent_id);
 
 -- author tables --
 CREATE TABLE author_books (
@@ -48,7 +61,17 @@ CREATE SEQUENCE auto_id_authors;
 CREATE TABLE authors (
 	id INTEGER NOT NULL PRIMARY KEY DEFAULT nextval('auto_id_authors'),
 	name CHARACTER VARYING (500) NOT NULL,
-	description TEXT
+	description TEXT,
+	books INTEGER NOT NULL DEFAULT 0
+);
+
+-- publisher tables --
+CREATE SEQUENCE auto_id_publishers;
+CREATE TABLE publishers (
+	id INTEGER NOT NULL PRIMARY KEY DEFAULT nextval('auto_id_publishers'),
+	name CHARACTER VARYING (500) NOT NULL,
+	description TEXT,
+	books INTEGER NOT NULL DEFAULT 0
 );
 
 -- user and address tables --

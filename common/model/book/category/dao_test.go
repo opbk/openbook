@@ -20,8 +20,7 @@ var _ = check.Suite(new(TestSuit))
 
 func (s *TestSuit) SetUpSuite(c *check.C) {
 	config := configuration.LoadConfiguration("")
-
-	db.InitDbConnection(config.Db.Driver, "postgres://postgres:passwordgfhjkm@localhost/opbook?sslmode=disable")
+	db.InitDbConnection(config.Db.Driver, config.Db.Connection)
 }
 
 func (s *TestSuit) SetUpTest(c *check.C) {
@@ -78,8 +77,8 @@ func (s *TestSuit) TestGetChildCategories(c *check.C) {
 
 	c.Check(categories[1].GetChildCategories()[0].Id, check.Equals, int64(6))
 
-	c.Check(categories[2].GetChildCategories()[0].Id, check.Equals, int64(4))
-	c.Check(categories[2].GetChildCategories()[1].Id, check.Equals, int64(5))
+	c.Check(categories[2].GetChildCategories()[0].Id, check.Equals, int64(5))
+	c.Check(categories[2].GetChildCategories()[1].Id, check.Equals, int64(4))
 
 	c.Check(categories[5].GetChildCategories()[0].Id, check.Equals, int64(7))
 
