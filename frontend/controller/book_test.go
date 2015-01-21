@@ -31,9 +31,6 @@ func (s *BookControllerTestSuit) SetUpSuite(c *check.C) {
 }
 
 func (s *BookControllerTestSuit) SetUpTest(c *check.C) {
-	// (&author.Author{0, "Andy Weir"}).Save()
-	// (&author.Author{0, "Michael Lewis"}).Save()
-	// (&author.Author{0, "The Lord of the Rings"}).Save()
 	s.FrontControllerTestSuit.SetUpTest(c)
 }
 
@@ -42,23 +39,11 @@ func (s *BookControllerTestSuit) TearDownSuite(c *check.C) {
 }
 
 func (s *BookControllerTestSuit) TestSearch(c *check.C) {
-	bookSearch = bookSearchMock
-	authorListByBooks = authorListByBooksMock
-	categoryListByParent = categoryListByParentMock
-	categoryFind = categoryFindMock
 
-	s.Get("/search")
 }
 
 func bookSearchMock(search map[string]interface{}, limit, offset int) []*book.Book {
-	fmt.Println("Hello! I'm mock function")
-
-	return []*book.Book{
-		&book.Book{0, "The Martian", "Six days ago, astronaut Mark Watney became one of the first people to walk on Mars.", time.Date(2013, time.March, 22, 0, 0, 0, 0, time.Local), time.Now()},
-		&book.Book{0, "The Egg", "You were on your way home when you died.It was a car accident.", time.Date(2014, time.November, 26, 0, 0, 0, 0, time.Local), time.Now()},
-		&book.Book{0, "Inside the Doomsday Machine", "Who understood the risk inherent in the assumption...", time.Date(2010, time.March, 15, 0, 0, 0, 0, time.Local), time.Now()},
-		&book.Book{0, "The Hobbit", "Like every other hobbit, Bilbo Baggins likes nothing...", time.Date(2012, time.September, 10, 0, 0, 0, 0, time.Local), time.Now()},
-	}
+	return make([]book.Book)
 }
 
 func authorListByBooksMock(booksId []int64) []*author.Author {

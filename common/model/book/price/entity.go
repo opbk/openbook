@@ -1,8 +1,8 @@
 package price
 
+import "github.com/opbk/openbook/common/model/book/price/pricetype"
+
 type Price struct {
-	Id     int64   `json:"id"`
-	BookId int64   `json:"book_id"`
-	Type   string  `json:"type"`
-	Price  float64 `json:"price"`
+	pricetype.Type
+	Price float64
 }

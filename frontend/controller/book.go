@@ -1,11 +1,11 @@
 package controller
 
 import (
-	// "fmt"
 	"html/template"
 	"math"
 	"net/http"
 	"path"
+	"time"
 
 	// logger "github.com/cihub/seelog"
 	"github.com/gorilla/mux"
@@ -39,6 +39,7 @@ var tfns = template.FuncMap{
 
 		return result
 	},
+	"html": func(a string) template.HTML { return template.HTML(a) },
 }
 
 func NewBookController() *BookController {
@@ -58,6 +59,37 @@ func NewBookController() *BookController {
 
 func (c *BookController) Routes(router *mux.Router) {
 	router.HandleFunc("/search", c.Search)
+	router.HandleFunc("/book/{id:[0-9]+}", c.Book)
+}
+
+func (c *BookController) Book(rw http.ResponseWriter, req *http.Request) {
+	request := web.NewRequest(req)
+	b := bookFind(request.GetInt64("id"))
+	if b == nil {
+		http.NotFound(rw, req)
+	}
+
+	prices := b.Prices()
+	authors := authorMapById(b.AuthorsId)
+	publishers := publisherMapById([]int64{b.PublisherId})
+
+	var path []*category.Category
+	if c := categoryFind(request.GetInt64("c")); c != nil {
+		path = c.GetPath()
+		path = append(path, c)
+	}
+
+	dueDate := time.Now().AddDate(0, 1, 0)
+
+	c.template.ExecuteTemplate(rw, "book", map[string]interface{}{
+		"book":          b,
+		"prices":        prices,
+		"authors":       authors,
+		"publishers":    publishers,
+		"path":          path,
+		"recomendation": make([]*book.Book, 0),
+		"dueDate":       dueDate,
+	})
 }
 
 func (c *BookController) Search(rw http.ResponseWriter, req *http.Request) {
@@ -72,7 +104,7 @@ func (c *BookController) Search(rw http.ResponseWriter, req *http.Request) {
 		path = append(path, c)
 	}
 
-	filter := BuildSearchMap(request)
+	filter := buildSearchMap(request)
 	books := bookSearch(filter, limit, offset)
 	booksCount := bookSearchCount(filter)
 
@@ -116,7 +148,7 @@ func (c *BookController) Search(rw http.ResponseWriter, req *http.Request) {
 	})
 }
 
-func BuildSearchMap(req *web.Request) map[string]interface{} {
+func buildSearchMap(req *web.Request) map[string]interface{} {
 	filter := make(map[string]interface{})
 	if search := req.GetString("s"); search != "" {
 		filter["search"] = search
@@ -143,6 +175,10 @@ var bookSearch = func(filter map[string]interface{}, limit, offset int) []*book.
 
 var bookSearchCount = func(filter map[string]interface{}) int {
 	return book.SearchCount(filter)
+}
+
+var bookFind = func(id int64) *book.Book {
+	return book.Find(id)
 }
 
 var authorMapById = func(ids []int64) map[int64]*author.Author {

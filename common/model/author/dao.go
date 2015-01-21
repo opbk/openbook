@@ -36,12 +36,20 @@ func connection() *sql.DB {
 	return db.Connection()
 }
 
+func scanRow(scanner db.RowScanner) *Author {
+	var author *Author = new(Author)
+	err := scanner.Scan(&author.Id, &author.Name, &author.Description, &author.Books)
+	if err != nil {
+		logger.Errorf("Can't scan row: %s", err)
+	}
+
+	return author
+}
+
 func interateRows(rows *sql.Rows) []*Author {
 	authors := make([]*Author, 0)
 	for rows.Next() {
-		var author *Author = new(Author)
-		rows.Scan(&author.Id, &author.Name, &author.Description, &author.Books)
-		authors = append(authors, author)
+		authors = append(authors, scanRow(rows))
 	}
 
 	return authors
@@ -50,8 +58,7 @@ func interateRows(rows *sql.Rows) []*Author {
 func interateRowsToMap(rows *sql.Rows) map[int64]*Author {
 	authors := make(map[int64]*Author)
 	for rows.Next() {
-		var author *Author = new(Author)
-		rows.Scan(&author.Id, &author.Name, &author.Description, &author.Books)
+		author := scanRow(rows)
 		authors[author.Id] = author
 	}
 
@@ -91,14 +98,8 @@ func Search(search map[string]interface{}) []*Author {
 }
 
 func Find(id int64) *Author {
-	var author *Author = new(Author)
 	row := connection().QueryRow(FIND, id)
-	err := row.Scan(&author.Id, &author.Name, &author.Description, &author.Books)
-
-	if err != nil {
-		logger.Errorf("Database error while finding author %d: %s", id, err)
-		return nil
-	}
+	author := scanRow(row)
 
 	return author
 }

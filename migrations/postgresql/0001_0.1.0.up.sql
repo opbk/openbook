@@ -14,7 +14,8 @@ CREATE TABLE books (
 	publisher_id INTEGER,
 	title CHARACTER VARYING (500) NOT NULL,
 	pages INTEGER,
-	language CHARACTER VARYING (5) NOT NULL DEFAULT 'ru',
+	language CHARACTER VARYING (50) NOT NULL DEFAULT 'Русский',
+	short TEXT,
 	description TEXT,
 	service_review TEXT,
 	critics_review TEXT,
@@ -146,6 +147,7 @@ CREATE INDEX book_orders_bid_idx on book_orders (book_id);
 CREATE SEQUENCE auto_id_prices;
 CREATE TABLE prices (
   id INTEGER NOT NULL PRIMARY KEY DEFAULT nextval('auto_id_prices'),
+  type CHARACTER VARYING(250) NOT NULL,
   name CHARACTER VARYING(250) NOT NULL
 );
 

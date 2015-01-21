@@ -29,10 +29,10 @@ func (s *TestSuit) SetUpTest(c *check.C) {
 	connection().Exec("TRUNCATE book_categories")
 	connection().Exec("TRUNCATE author_books")
 
-	(&Book{0, "The Martian", 600, "en", "Six days ago, astronaut Mark Watney became one of the first people to walk on Mars.", time.Date(2013, time.March, 22, 0, 0, 0, 0, time.Local), time.Now(), 0, 1, []int64{1}, []int64{500}}).Save()
-	(&Book{0, "The Egg", 500, "en", "You were on your way home when you died.It was a car accident.", time.Date(2014, time.November, 26, 0, 0, 0, 0, time.Local), time.Now(), 0, 1, []int64{1}, []int64{1}}).Save()
-	(&Book{0, "Inside the Doomsday Machine", 400, "en", "Who understood the risk inherent in the assumption...", time.Date(2010, time.March, 15, 0, 0, 0, 0, time.Local), time.Now(), 0, 2, []int64{2}, []int64{2}}).Save()
-	(&Book{0, "The Hobbit", 700, "en", "Like every other hobbit, Bilbo Baggins likes nothing...", time.Date(2012, time.September, 10, 0, 0, 0, 0, time.Local), time.Now(), 0, 1, []int64{1}, []int64{3}}).Save()
+	(&Book{0, "The Martian", 600, "en", "", "Six days ago, astronaut Mark Watney became one of the first people to walk on Mars.", "", "", time.Date(2013, time.March, 22, 0, 0, 0, 0, time.Local), time.Now(), 0, 1, []int64{1}, []int64{500}}).Save()
+	(&Book{0, "The Egg", 500, "en", "", "You were on your way home when you died.It was a car accident.", "", "", time.Date(2014, time.November, 26, 0, 0, 0, 0, time.Local), time.Now(), 0, 1, []int64{1}, []int64{1}}).Save()
+	(&Book{0, "Inside the Doomsday Machine", 400, "en", "", "Who understood the risk inherent in the assumption...", "", "", time.Date(2010, time.March, 15, 0, 0, 0, 0, time.Local), time.Now(), 0, 2, []int64{2}, []int64{2}}).Save()
+	(&Book{0, "The Hobbit", 700, "en", "", "Like every other hobbit, Bilbo Baggins likes nothing...", "", "", time.Date(2012, time.September, 10, 0, 0, 0, 0, time.Local), time.Now(), 0, 1, []int64{1}, []int64{3}}).Save()
 
 	AddBookToCategory(1, 1)
 	AddBookToCategory(1, 3)

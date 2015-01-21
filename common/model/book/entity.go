@@ -3,13 +3,16 @@ package book
 import "time"
 
 type Book struct {
-	Id          int64 `orm:"pk"`
-	Title       string
-	Pages       int
-	Language    string
-	Description string
-	Release     time.Time
-	Created     time.Time
+	Id            int64
+	Title         string
+	Pages         int
+	Language      string
+	Short         string
+	Description   string
+	ServiceReview string
+	CriticsReview string
+	Release       time.Time
+	Created       time.Time
 
 	SeriesId     int64
 	PublisherId  int64

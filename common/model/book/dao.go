@@ -6,21 +6,25 @@ import (
 
 	logger "github.com/cihub/seelog"
 	"github.com/opbk/openbook/common/db"
+	"github.com/opbk/openbook/common/model/book/price"
 )
 
 const (
-	FIND                 = "SELECT id, title, pages, language, description, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id WHERE id = $1 GROUP BY id"
-	LIST                 = "SELECT id, title, pages, language, description, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id GROUP BY id LIMIT $1 OFFSET $2"
-	INSERT               = "INSERT INTO books(title, pages, language, description, release, created, series_id, publisher_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id"
-	UPDATE               = "UPDATE books SET title = $1, pages = $2, language = $3, description = $4, release = $5, release = $6, series_id = $7, publisher_id = $8 WHERE id = $9"
-	DELETE               = "DELETE FROM books WHERE id = $1"
+	FIND   = "SELECT id, title, pages, language, short, description, service_review, critics_review, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id WHERE id = $1 GROUP BY id"
+	LIST   = "SELECT id, title, pages, language, short, description, service_review, critics_review, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id GROUP BY id LIMIT $1 OFFSET $2"
+	INSERT = "INSERT INTO books(title, pages, language, short, description, service_review, critics_review, release, created, series_id, publisher_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id"
+	UPDATE = "UPDATE books SET title = $1, pages = $2, language = $3, language = $4, description = $5, service_review = $6, critics_review = $7, release = $8, release = $9, series_id = $10, publisher_id = $11 WHERE id = $12"
+	DELETE = "DELETE FROM books WHERE id = $1"
+)
+
+const (
+	SEARCH       = "SELECT id, title, pages, language, short, description, service_review, critics_review, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id WHERE %s 1 = 1 GROUP BY id  ORDER BY created DESC LIMIT $1 OFFSET $2"
+	SEARCH_COUNT = "SELECT COUNT(DISTINCT id) FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id WHERE %s 1 = 1"
+)
+
+const (
 	ADD_BOOK_TO_CATEGORY = "INSERT INTO book_categories (book_id, category_id) VALUES ($1, $2)"
 	ADD_BOOK_TO_AUTHOR   = "INSERT INTO author_books (book_id, author_id) VALUES ($1, $2)"
-)
-
-const (
-	SEARCH       = "SELECT id, title, pages, language, description, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id WHERE %s 1 = 1 GROUP BY id  ORDER BY created DESC LIMIT $1 OFFSET $2"
-	SEARCH_COUNT = "SELECT COUNT(DISTINCT id) FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id WHERE %s 1 = 1"
 )
 
 var searchWhere = map[string]string{
@@ -36,11 +40,11 @@ func connection() *sql.DB {
 	return db.Connection()
 }
 
-func scanRow(scaner db.RowScanner) *Book {
+func scanRow(scanner db.RowScanner) *Book {
 	var book *Book = new(Book)
 	var categories string
 	var authors string
-	err := scaner.Scan(&book.Id, &book.Title, &book.Pages, &book.Language, &book.Description, &book.Release, &book.Created, &book.SeriesId, &book.PublisherId, &authors, &categories)
+	err := scanner.Scan(&book.Id, &book.Title, &book.Pages, &book.Language, &book.Short, &book.Description, &book.ServiceReview, &book.CriticsReview, &book.Release, &book.Created, &book.SeriesId, &book.PublisherId, &authors, &categories)
 	if err != nil {
 		logger.Errorf("Can't scan row: %s", err)
 	}
@@ -117,6 +121,10 @@ func AddBookToAuthor(bookId, authorId int64) {
 	}
 }
 
+func (b *Book) Prices() map[string]*price.Price {
+	return price.MapByBookId(b.Id)
+}
+
 func (b *Book) Save() {
 	if b.Id != 0 {
 		b.update()
@@ -126,14 +134,14 @@ func (b *Book) Save() {
 }
 
 func (b *Book) update() {
-	_, err := connection().Exec(UPDATE, b.Title, b.Pages, b.Language, b.Description, b.Release, b.Created, b.SeriesId, b.PublisherId, b.Id)
+	_, err := connection().Exec(UPDATE, b.Title, b.Pages, b.Language, b.Short, b.Description, b.ServiceReview, b.CriticsReview, b.Release, b.Created, b.SeriesId, b.PublisherId, b.Id)
 	if err != nil {
 		logger.Errorf("Database error while updating book %d: %s", b.Id, err)
 	}
 }
 
 func (b *Book) insert() {
-	err := connection().QueryRow(INSERT, b.Title, b.Pages, b.Language, b.Description, b.Release, b.Created, b.SeriesId, b.PublisherId).Scan(&b.Id)
+	err := connection().QueryRow(INSERT, b.Title, b.Pages, b.Language, b.Short, b.Description, b.ServiceReview, b.CriticsReview, b.Release, b.Created, b.SeriesId, b.PublisherId).Scan(&b.Id)
 	if err != nil {
 		logger.Errorf("Database error while inserting book: %s", err)
 	}
