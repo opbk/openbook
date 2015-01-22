@@ -30,7 +30,7 @@
 						{% if $.author %}
 							<li><a href="/search?p={% $.publisher %}&c={% $.category %}&s={% $.search %}"><span>< Все авторы</span></a></li>
 						{% end %}
-						<li><a href="/search?a={% $key %}&p={% $.publisher %}&c={% $.category %}&s={% $.search %}"><span>{% $author.Name %}</span> <span class="counter">({% $author.Books %})</span></a></li>
+						<li><a href="/search?a={% $author.Id %}&p={% $.publisher %}&c={% $.category %}&s={% $.search %}"><span>{% $author.Name %}</span> <span class="counter">({% $author.Books %})</span></a></li>
 					{% end %}
 					</ul>
 				</li>
@@ -43,7 +43,7 @@
 						{% if $.publisher %}
 							<li><a href="/search?a={% $.author %}&c={% $.category %}&s={% $.search %}"><span>< Все издательства</span></a></li>
 						{% end %}
-						<li><a href="/search?p={% $key %}&a={% $.author %}&c={% $.category %}&s={% $.search %}"><span>{% $publisher.Name %}</span> <span class="counter">({% $publisher.Books %})</span></a></li>
+						<li><a href="/search?p={% $publisher.Id %}&a={% $.author %}&c={% $.category %}&s={% $.search %}"><span>{% $publisher.Name %}</span> <span class="counter">({% $publisher.Books %})</span></a></li>
 					{% end %}
 					</ul>
 				</li>

@@ -84,7 +84,7 @@ func Search(search map[string]interface{}) []*Publisher {
 
 	rows, err := connection().Query(fmt.Sprintf(SEARCH, where))
 	if err != nil {
-		logger.Errorf("Database error while searching list of books: %s", err)
+		logger.Errorf("Database error while searching list of publishers: %s", err)
 	}
 
 	return interateRows(rows)

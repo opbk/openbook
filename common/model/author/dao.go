@@ -83,15 +83,15 @@ func MapById(ids []int64) map[int64]*Author {
 	return interateRowsToMap(rows)
 }
 
-func Search(search map[string]interface{}) []*Author {
+func Search(filter map[string]interface{}) []*Author {
 	var where string
-	for key, val := range search {
+	for key, val := range filter {
 		where += fmt.Sprintf(searchWhere[key], val)
 	}
 
 	rows, err := connection().Query(fmt.Sprintf(SEARCH, where))
 	if err != nil {
-		logger.Errorf("Database error while searching list of books: %s", err)
+		logger.Errorf("Database error while searching list of authors: %s", err)
 	}
 
 	return interateRows(rows)

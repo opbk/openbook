@@ -2,11 +2,13 @@ package category
 
 import (
 	"database/sql"
-	"github.com/opbk/openbook/common/db"
-
-	logger "github.com/cihub/seelog"
+	"fmt"
 	"strconv"
 	"strings"
+
+	logger "github.com/cihub/seelog"
+
+	"github.com/opbk/openbook/common/db"
 )
 
 const (
@@ -19,7 +21,17 @@ const (
 
 const (
 	FIND_CHILD_CATEGORIES = "SELECT id, parent_id, path, name, books FROM categories WHERE parent_id = $1"
+	SEARCH                = "SELECT c.id, c.parent_id, c.path, c.name, COUNT(DISTINCT b.id) as books FROM categories as c LEFT JOIN book_categories as bc ON c.id = bc.category_id LEFT JOIN books as b ON b.id = bc.book_id LEFT JOIN author_books as ab ON ab.book_id = b.id WHERE %s 1 = 1 GROUP BY c.id  ORDER BY books DESC"
 )
+
+var searchWhere = map[string]string{
+	"category":  " parent_id = %d and ",
+	"author":    " author_id = %d and ",
+	"release":   " release > '%s' and ",
+	"series":    " series_id = %d and ",
+	"publisher": " publisher_id = %d and ",
+	"search":    " title LIKE '%%%s%%' and ",
+}
 
 func connection() *sql.DB {
 	return db.Connection()
@@ -53,12 +65,21 @@ func ListChildCategories(id int64) []*Category {
 }
 
 func Search(filter map[string]interface{}) []*Category {
-	id, ok := filter["category"]
-	if ok {
-		return ListChildCategories(id.(int64))
+	var where string
+	for key, val := range filter {
+		where += fmt.Sprintf(searchWhere[key], val)
 	}
 
-	return ListChildCategories(0)
+	if _, ok := filter["category"]; !ok {
+		where += fmt.Sprintf(searchWhere["category"], 0)
+	}
+
+	rows, err := connection().Query(fmt.Sprintf(SEARCH, where))
+	if err != nil {
+		logger.Errorf("Database error while searching list of categories: %s", err)
+	}
+
+	return interateRows(rows)
 }
 
 func Find(id int64) *Category {
