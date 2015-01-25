@@ -24,8 +24,10 @@ func initDataBases(config *configuration.Config) {
 }
 
 func initControllers(router *mux.Router) {
+	tpl := controller.GetTemplate()
 	for _, controller := range controller.GetControllers() {
 		controller.Routes(router)
+		controller.Template(tpl)
 	}
 }
 
@@ -35,7 +37,7 @@ func initStaticHandler(router *mux.Router, config *configuration.Config) {
 }
 
 func main() {
-	var configFile *string = flag.String("config", "/etc/openbook/config.gcfg", "configuration file")
+	var configFile *string = flag.String("config", "/etc/openbook/frontend/config.gcfg", "configuration file")
 	flag.Parse()
 
 	config := configuration.LoadConfiguration(*configFile)

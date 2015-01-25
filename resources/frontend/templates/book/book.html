@@ -42,7 +42,7 @@
 					<div class="panel panel-default price-panel text-center">
 						<div class="price-box">Розничная цена: {% (index $.prices "retail").Price %}р</div>
 						<div>
-							<a class="btn btn-danger" href="/" role="button"><b>Взять книгу до {% $.dueDate.Format "1.2.2006" %}</b></a>
+							<a class="btn btn-danger" href="/order" role="button"><b>Взять книгу до {% $.dueDate.Format "1.2.2006" %}</b></a>
 						</div>
 						<div class="membership-box">
 							<a href="#" ng-click="hideMembership = !hideMembership">Детали подписки:</a>

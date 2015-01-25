@@ -1,0 +1,18 @@
+{% define "signup" %}
+	{% template "header" . %}
+		<div class="row">
+			<div class="col-sx-12">
+				<div class="signup">
+					<form class="form-inline" action="/signup" method="post">
+						<div class="form-group">
+							<input type="email" required="true" name="email" class="form-control input-lg" placeholder="Оставьте ваш email адрес для связи">
+						</div>
+						<div class="form-group">
+							<input type="submit" class="form-control input-lg" value="Отправить">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	{% template "footer" %}
+{% end %}

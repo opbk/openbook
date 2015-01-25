@@ -1,4 +1,5 @@
-DAEMON=/usr/lib/openbook/frontend
+DAEMON=/usr/lib/openbook/frontend/frontend
+ARGS=" -config /etc/openbook/frontend/config.gcfg"
 PIDFILE=/var/run/openbook-frontend.pid
 
 case "$1" in
@@ -8,7 +9,8 @@ case "$1" in
         --user openbook --group openbook \
         -b --make-pidfile \
         --chuid openbook \
-        --exec $DAEMON
+        --exec $DAEMON \
+        --$ARGS
     ;;
   stop)
     echo "Stopping server"

@@ -36,6 +36,9 @@ build_backend: dependencies
 	cp resources/seelog.xml $(BUILD_DIR)/backend/etc/openbook/backend/seelog.xml
 	cp -r deb/backend/* $(BUILD_DIR)/backend/
 
+deb_backend: build_backend
+	fakeroot dpkg-deb --build build/backend backend_$(VERSION)_amd64.deb
+
 build_frontend: dependencies
 	rm -rf $(BUILD_DIR)/frontend
 	$(GO) build -o $(BUILD_DIR)/frontend/usr/lib/openbook/frontend/frontend $(PROJECT)/frontend
@@ -48,11 +51,12 @@ build_frontend: dependencies
 	cp resources/seelog.xml $(BUILD_DIR)/frontend/etc/openbook/frontend/seelog.xml
 	cp -r deb/frontend/* $(BUILD_DIR)/frontend/
 
+deb_frontend: build_frontend
+	fakeroot dpkg-deb --build build/frontend frontend_$(VERSION)_amd64.deb
+
 build: build_backend build_frontend
 
-deb: clear_deb
-	fakeroot dpkg-deb --build build/backend backend_$(VERSION)_amd64.deb
-	fakeroot dpkg-deb --build build/frontend frontend_$(VERSION)_amd64.deb
+deb: deb_frontend deb_backend
 
 test: 
 	$(GO) test $(PROJECT)/common/model/book

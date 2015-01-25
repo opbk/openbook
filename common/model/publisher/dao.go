@@ -29,7 +29,7 @@ var searchWhere = map[string]string{
 	"release":   " release > '%s' and ",
 	"series":    " series_id = %d and ",
 	"publisher": " publisher_id = %d and ",
-	"search":    " title LIKE '%%%s%%' and ",
+	"search":    " title ILIKE '%%%s%%' and ",
 }
 
 func connection() *sql.DB {

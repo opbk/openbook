@@ -1,16 +1,11 @@
 package controller
 
 import (
-	"html/template"
-	"math"
 	"net/http"
-	"path"
 	"time"
 
-	// logger "github.com/cihub/seelog"
 	"github.com/gorilla/mux"
 
-	"github.com/opbk/openbook/common/configuration"
 	"github.com/opbk/openbook/common/model/author"
 	"github.com/opbk/openbook/common/model/book"
 	"github.com/opbk/openbook/common/model/book/category"
@@ -23,36 +18,9 @@ type BookController struct {
 	DefaultLimitPerPage int
 }
 
-var tfns = template.FuncMap{
-	"add":    func(a, b int) int { return a + b },
-	"sub":    func(a, b int) int { return a - b },
-	"xrange": func(a int) []int { return make([]int, a) },
-	"pagination": func(total, limit int) []map[string]int {
-		total = int(math.Ceil(float64(total) / float64(limit)))
-		result := make([]map[string]int, 0)
-		for i := 0; i < total; i++ {
-			result = append(result, map[string]int{
-				"page":   i + 1,
-				"offset": i * limit,
-			})
-		}
-
-		return result
-	},
-	"html": func(a string) template.HTML { return template.HTML(a) },
-}
-
 func NewBookController() *BookController {
 	c := new(BookController)
 	c.DefaultLimitPerPage = 10
-
-	tPath := configuration.GetConfig().Frontend.TemplatePath
-	c.template = template.Must(template.New("index").Funcs(tfns).Delims("{%", "%}").ParseFiles(
-		path.Join(tPath, "header.html"),
-		path.Join(tPath, "footer.html"),
-		path.Join(tPath, "book", "search.html"),
-		path.Join(tPath, "book", "book.html"),
-	))
 
 	return c
 }
@@ -81,7 +49,7 @@ func (c *BookController) Book(rw http.ResponseWriter, req *http.Request) {
 
 	dueDate := time.Now().AddDate(0, 1, 0)
 
-	c.template.ExecuteTemplate(rw, "book", map[string]interface{}{
+	c.Template().ExecuteTemplate(rw, "book", map[string]interface{}{
 		"book":          b,
 		"prices":        prices,
 		"authors":       authors,
@@ -126,7 +94,7 @@ func (c *BookController) Search(rw http.ResponseWriter, req *http.Request) {
 		publishers = publisherMapById(publishersId)
 	}
 
-	c.template.ExecuteTemplate(rw, "search", map[string]interface{}{
+	c.Template().ExecuteTemplate(rw, "search", map[string]interface{}{
 		"books": map[string]interface{}{
 			"books":      books,
 			"authors":    authors,
