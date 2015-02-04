@@ -41,3 +41,8 @@ func (s *TestSuit) TestFind(c *check.C) {
 	c.Assert(u.Password, check.Equals, "123456")
 	c.Assert(u.Name, check.Equals, "A. Koklin")
 }
+
+func (s *TestSuit) TestFindByEmail(c *check.C) {
+	u := FindByEmail("netw00rk@gmail.com")
+	c.Assert(u.Id, check.Equals, int64(1))
+}

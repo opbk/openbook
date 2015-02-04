@@ -42,16 +42,16 @@
 					<div class="panel panel-default price-panel text-center">
 						<div class="price-box">Розничная цена: {% (index $.prices "retail").Price %}р</div>
 						<div>
-							<a class="btn btn-danger" href="/order" role="button"><b>Взять книгу до {% $.dueDate.Format "1.2.2006" %}</b></a>
+							<a class="btn btn-danger" href="/order" role="button"><b>Взять книгу до {% $.dueDate.Format "01.02.2006" %}</b></a>
 						</div>
 						<div class="membership-box">
 							<a href="#" ng-click="hideMembership = !hideMembership">Детали подписки:</a>
 							<ul ng-hide="hideMembership">
-								<li>First book free with 30-day trial</li>
-								<li>$14.95/month thereafter for your choice of 1 new book each month</li>
-								<li>Cancel easily anytime</li>
-								<li>Exchange books you don't like</li>
-								<li>All selected books are yours to keep, even if you cancel</li>
+								<li>Стоимость базовой подписки: 490 рублей за 30 календарных дней</li>
+								<li>2 недели на возврат книги после окончания срока подписки</li>
+								<li>Сдайте и возьмите новую книгу в любой момент</li>
+								<li>Если Вам понравилась книга, просто оставьте ее себе (подписка аннулируется)</li>
+								<li><a href="/howitworks">Подронее</a></li>
 							</ul>
 						</div>
 						<!-- <div class="separator">- или -</div>
@@ -97,5 +97,5 @@
 			</div>
 		{% end %}
 	</div>
-	{% template "footer" %}
+	{% template "footer" . %}
 {% end %}

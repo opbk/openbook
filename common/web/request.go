@@ -2,9 +2,11 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
+	"github.com/gorilla/schema"
 )
 
 type Request struct {
@@ -91,6 +93,11 @@ func (r *Request) GetObject(t ...interface{}) error {
 	return decoder.Decode(t[0])
 }
 
-func (r *Request) GetObjectFromFile(name, t interface{}) {
+func (r *Request) GetForm(t interface{}) error {
+	decoder := schema.NewDecoder()
+	if err := r.req.ParseForm(); err != nil {
+		return err
+	}
 
+	return decoder.Decode(t, r.req.PostForm)
 }

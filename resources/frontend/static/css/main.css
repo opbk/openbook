@@ -113,7 +113,7 @@ body {
 }
 
 .content {
-	margin-bottom: 115px;
+	margin-bottom: 130px;
 }
 
 .sidebar {
@@ -229,9 +229,9 @@ body {
 }
 
 .book .price-panel {
-	width: 238px;
 	background: #f1f1f1;
 	padding: 19px 9px;
+	width: 239px;
 }
 
 .book .price-panel .btn {
@@ -277,13 +277,86 @@ body {
 }
 
 .signup {
-	margin-top: 150px;
+	width: 620px;
+	margin: 10px auto;
 }
 
-.signup form {
-	text-align: center;
+.signup h3 {
+	margin-bottom: 15px;
 }
 
-.signup form input[type=email] {
-	width: 500px;
+.signup label {
+	font-weight: normal !important;
+}
+
+.signup .row {
+	margin-bottom: 20px;
+}
+
+.signup input[type=email] {
+	width: 300px;
+}
+
+.signup input[type=password] {
+	width: 200px;
+}
+
+.signup input[type=password] {
+	width: 200px;
+}
+
+.signup .radio-inline {
+	margin-left: 15px;
+}
+
+.signup .text-danger {
+	margin: 5px 0 0 0;
+}
+
+.order h4 {
+	border-bottom: 1px solid #dddddd;
+	margin: 0;
+	padding: 10px 0;
+}
+
+.order td {
+	border: 0px !important;
+}
+
+.order ul {
+	padding-left: 30px;
+	list-style-type: none;
+}
+
+.order ul label {
+	font-weight: normal;
+}
+
+.order-book .cover {
+	width: 110px;
+}
+
+.order-book .title {
+	vertical-align: middle;
+	font-size: 110%;
+}
+
+.order-shiping {
+	margin-bottom: 20px;
+}
+
+.order-membership {
+	margin-bottom: 40px;
+}
+
+.order-membership p {
+	margin: 10px 0 0 10px;
+}
+
+.info {
+	font-size: 14px;
+}
+
+.info li {
+	margin-bottom: 5px;
 }

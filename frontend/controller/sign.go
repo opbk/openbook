@@ -8,6 +8,9 @@ import (
 
 	"github.com/opbk/openbook/common/model/user"
 	"github.com/opbk/openbook/common/web"
+	"github.com/opbk/openbook/common/web/auth"
+	"github.com/opbk/openbook/common/web/form/utils"
+	"github.com/opbk/openbook/frontend/form"
 )
 
 type SignController struct {
@@ -19,24 +22,43 @@ func NewSignController() *SignController {
 }
 
 func (c *SignController) Routes(router *mux.Router) {
-	router.HandleFunc("/signup", c.SignUp)
+	router.HandleFunc("/signup", c.Sign)
+	router.HandleFunc("/signout", auth.UserRequired(c.SignOut))
 }
 
-func (c *SignController) SignUp(rw http.ResponseWriter, req *http.Request) {
+func (c *SignController) Sign(rw http.ResponseWriter, req *http.Request) {
 	request := web.NewRequest(req)
+	f := form.NewSignUp()
+	f.From = request.GetString("from", "/")
 
-	var u *user.User
-	if email := request.GetString("email"); email != "" {
-		u = new(user.User)
-		u.Email = email
-		u.Password = user.GenPassword()
-		u.Created = time.Now()
-		u.Modified = time.Now()
-		u.LastEnter = time.Now()
-		u.Save()
+	if req.Method == "POST" {
+		if err := request.GetForm(f); err == nil && utils.IsValid(f) {
+			var u *user.User
+			if f.New {
+				u = new(user.User)
+				u.Email = f.Email
+				u.Password = user.GenPassword()
+				u.Created = time.Now()
+				u.Modified = time.Now()
+				u.LastEnter = time.Now()
+				u.Save()
+			} else {
+				u = f.User
+			}
+
+			auth.Set(u, rw, req)
+			http.Redirect(rw, req, f.From, http.StatusFound)
+		}
 	}
 
-	c.Template().ExecuteTemplate(rw, "signup", map[string]interface{}{
-		"user": u,
+	c.ExecuteTemplate(rw, req, "signup", map[string]interface{}{
+		"form": f,
 	})
+}
+
+func (c *SignController) SignOut(rw http.ResponseWriter, req *http.Request) {
+	request := web.NewRequest(req)
+	auth.Delete(rw, req)
+
+	http.Redirect(rw, req, request.GetString("from", "/"), http.StatusFound)
 }

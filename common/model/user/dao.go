@@ -8,11 +8,12 @@ import (
 )
 
 const (
-	LIST   = "SELECT id, email, password, name, created, modified, last_enter FROM users"
-	FIND   = "SELECT id, email, password, name, created, modified, last_enter FROM users WHERE id = $1"
-	INSERT = "INSERT INTO users (email, password, name, created, last_enter) VALUES ($1, $2, $3, $4, $5) RETURNING id"
-	UPDATE = "UPDATE users SET email = $1, password = $2, name = $3, created = $4, last_enter = $6 WHERE id = $7"
-	DELETE = "DELETE FROM users WHERE id = $1"
+	LIST          = "SELECT id, email, password, name, created, modified, last_enter FROM users"
+	FIND          = "SELECT id, email, password, name, created, modified, last_enter FROM users WHERE id = $1"
+	FIND_BY_EMAIL = "SELECT id, email, password, name, created, modified, last_enter FROM users WHERE email = $1"
+	INSERT        = "INSERT INTO users (email, password, name, created, last_enter) VALUES ($1, $2, $3, $4, $5) RETURNING id"
+	UPDATE        = "UPDATE users SET email = $1, password = $2, name = $3, created = $4, last_enter = $6 WHERE id = $7"
+	DELETE        = "DELETE FROM users WHERE id = $1"
 )
 
 func connection() *sql.DB {
@@ -49,6 +50,10 @@ func List() []*User {
 
 func Find(id int64) *User {
 	return scanRow(connection().QueryRow(FIND, id))
+}
+
+func FindByEmail(email string) *User {
+	return scanRow(connection().QueryRow(FIND_BY_EMAIL, email))
 }
 
 func (u *User) Save() {

@@ -24,5 +24,5 @@ func (c *IndexController) Index(rw http.ResponseWriter, req *http.Request) {
 }
 
 func (c *IndexController) HowItWorks(rw http.ResponseWriter, req *http.Request) {
-	http.Redirect(rw, req, "/signup", http.StatusFound)
+	c.ExecuteTemplate(rw, req, "howitworks", map[string]interface{}{})
 }

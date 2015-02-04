@@ -6,11 +6,10 @@ import (
 	"net/http"
 	"path"
 
-	"github.com/gorilla/context"
-
 	"github.com/opbk/openbook/common/configuration"
 	"github.com/opbk/openbook/common/model/user"
 	"github.com/opbk/openbook/common/web"
+	"github.com/opbk/openbook/common/web/auth"
 )
 
 var tfns = template.FuncMap{
@@ -44,8 +43,14 @@ func (c *FrontendController) Template(tpl ...*template.Template) *template.Templ
 	return c.template
 }
 
+func (c *FrontendController) ExecuteTemplate(rw http.ResponseWriter, req *http.Request, name string, params map[string]interface{}) {
+	params["user"] = c.getUser(req)
+	params["location"] = req.URL.String()
+	c.Template().ExecuteTemplate(rw, name, params)
+}
+
 func (c *FrontendController) getUser(req *http.Request) *user.User {
-	return context.Get(req, "user").(*user.User)
+	return auth.Get(req)
 }
 
 func GetTemplate() *template.Template {
@@ -53,9 +58,13 @@ func GetTemplate() *template.Template {
 	return template.Must(template.New("index").Funcs(tfns).Delims("{%", "%}").ParseFiles(
 		path.Join(tPath, "header.html"),
 		path.Join(tPath, "footer.html"),
+		path.Join(tPath, "howitworks.html"),
+		path.Join(tPath, "order.html"),
 		path.Join(tPath, "sign", "signup.html"),
 		path.Join(tPath, "book", "search.html"),
 		path.Join(tPath, "book", "book.html"),
+		path.Join(tPath, "user", "history.html"),
+		path.Join(tPath, "user", "wishlist.html"),
 	))
 }
 
@@ -65,6 +74,7 @@ func GetControllers() []web.Controller {
 		NewSignController(),
 		NewBookController(),
 		NewOrderController(),
+		NewUserController(),
 	}
 
 	return controllers

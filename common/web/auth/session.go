@@ -31,3 +31,9 @@ func Get(req *http.Request) *user.User {
 	}
 	return context.Get(req, "user").(*user.User)
 }
+
+func Delete(rw http.ResponseWriter, req *http.Request) {
+	session, _ := store.Get(req, "auth")
+	delete(session.Values, "id")
+	session.Save(req, rw)
+}

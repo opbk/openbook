@@ -9,7 +9,8 @@ all: build
 
 dependencies = code.google.com/p/gcfg \
 github.com/lib/pq \
-github.com/gorilla/mux \
+github.com/gorilla/schema \
+github.com/gorilla/ \
 github.com/gorilla/sessions \
 github.com/gorilla/securecookie \
 gopkg.in/check.v1 \
@@ -65,6 +66,7 @@ test:
 	$(GO) test $(PROJECT)/common/model/publisher
 	$(GO) test $(PROJECT)/common/model/user
 	$(GO) test $(PROJECT)/frontend
+	$(GO) test $(PROJECT)/frontend/form
 	$(GO) test $(PROJECT)/backend
 
 migrate_up:

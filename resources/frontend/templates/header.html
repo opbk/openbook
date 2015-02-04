@@ -23,6 +23,7 @@
 	<script src="/static/js/angular/slick.min.js"></script>
 
 	<script src="/static/js/app/app.js"></script>
+	<script src="/static/js/app/controller/signup.js"></script>
 
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -36,8 +37,17 @@
 		<div class="header">
 			<div class="row">
 				<div class="col-xs-12">
-					<span class="pull-right top-crumb"><a href="/signup">Войти</a></span>
+					{% if not .user %}
+						<span class="pull-right top-crumb"><a href="/signup?from={% .location %}">Войти</a></span>
+					{% else %}
+						<span class="pull-right top-crumb"><a href="/signout?from={% .location %}">Выход</a></span>
+					{% end %}
 					<span class="pull-right top-crumb">Звоните нам (888) 283-5051</span>
+					{% if .user %}
+						<span class="pull-right top-crumb"><a href="/user/me">
+							<b>Привет, {% if .user.Name %}{% .user.Name %}{% else %}Юзернейм{% end %}!</b>
+						</a></span>
+					{% end %}
 				</div>
 			</div>
 			<div class="row">

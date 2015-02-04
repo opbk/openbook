@@ -49,7 +49,7 @@ func (c *BookController) Book(rw http.ResponseWriter, req *http.Request) {
 
 	dueDate := time.Now().AddDate(0, 1, 0)
 
-	c.Template().ExecuteTemplate(rw, "book", map[string]interface{}{
+	c.ExecuteTemplate(rw, req, "book", map[string]interface{}{
 		"book":          b,
 		"prices":        prices,
 		"authors":       authors,
@@ -94,7 +94,7 @@ func (c *BookController) Search(rw http.ResponseWriter, req *http.Request) {
 		publishers = publisherMapById(publishersId)
 	}
 
-	c.Template().ExecuteTemplate(rw, "search", map[string]interface{}{
+	c.ExecuteTemplate(rw, req, "search", map[string]interface{}{
 		"books": map[string]interface{}{
 			"books":      books,
 			"authors":    authors,
