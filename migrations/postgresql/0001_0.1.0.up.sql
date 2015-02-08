@@ -110,6 +110,7 @@ CREATE TABLE subscriptions (
 CREATE TABLE user_subscriptions (
 	user_id INTEGER NOT NULL,
 	subscription_id INTEGER NOT NULL,
+	expiration DATE,
 	PRIMARY KEY (user_id, subscription_id)
 );
 CREATE INDEX user_subscriptions_sid_idx on user_subscriptions (subscription_id);

@@ -63,9 +63,13 @@ deb: deb_frontend deb_backend
 test: 
 	$(GO) test $(PROJECT)/common/model/book
 	$(GO) test $(PROJECT)/common/model/book/category
+	$(GO) test $(PROJECT)/common/model/book/category/utils
+	$(GO) test $(PROJECT)/common/model/book/price
 	$(GO) test $(PROJECT)/common/model/author
 	$(GO) test $(PROJECT)/common/model/publisher
 	$(GO) test $(PROJECT)/common/model/user
+	$(GO) test $(PROJECT)/common/model/user/subscription
+	$(GO) test $(PROJECT)/common/model/subscription
 	$(GO) test $(PROJECT)/frontend
 	$(GO) test $(PROJECT)/frontend/form
 	$(GO) test $(PROJECT)/backend

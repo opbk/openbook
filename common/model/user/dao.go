@@ -4,7 +4,9 @@ import (
 	"database/sql"
 
 	logger "github.com/cihub/seelog"
+
 	"github.com/opbk/openbook/common/db"
+	"github.com/opbk/openbook/common/model/user/subscription"
 )
 
 const (
@@ -54,6 +56,10 @@ func Find(id int64) *User {
 
 func FindByEmail(email string) *User {
 	return scanRow(connection().QueryRow(FIND_BY_EMAIL, email))
+}
+
+func (u *User) Subscription() *subscription.UserSubscription {
+	return subscription.FindByUser(u.Id)
 }
 
 func (u *User) Save() {
