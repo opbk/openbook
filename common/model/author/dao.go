@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	logger "github.com/cihub/seelog"
+
 	"github.com/opbk/openbook/common/arrays"
 	"github.com/opbk/openbook/common/db"
 )

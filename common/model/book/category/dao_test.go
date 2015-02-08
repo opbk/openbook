@@ -2,11 +2,13 @@ package category
 
 import (
 	"testing"
+	"time"
 
 	"gopkg.in/check.v1"
 
 	"github.com/opbk/openbook/common/configuration"
 	"github.com/opbk/openbook/common/db"
+	"github.com/opbk/openbook/common/model/book"
 )
 
 func Test(t *testing.T) {

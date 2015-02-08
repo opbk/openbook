@@ -22,16 +22,28 @@ type Db struct {
 	Connection string
 }
 
+type Aws struct {
+	Region    string
+	AccessKey string
+	SecretKey string
+	Bucket    string
+}
+
+type EmailSender struct {
+	From string
+}
+
 type Main struct {
-	SendDelay string
-	LogFile   string
-	MaxProc   int
+	LogFile string
+	MaxProc int
 }
 
 type Config struct {
 	Frontend
 	Backend
 	Db
+	Aws
+	EmailSender
 	Main
 }
 
@@ -50,8 +62,15 @@ uploadpath   = resources/frontend/templates/
 httpport     = 8090
 templatepath = resources/backend/templates/
 
+[aws]
+region = us-east-1
+accesskey = 
+secretkey = 
+
+[emailsender]
+from = noreply@opbook.rog
+
 [main]
-senddelay = 0.1s
 logfile = seelog.xml
 maxproc = 8
 `

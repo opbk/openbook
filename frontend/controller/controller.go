@@ -65,6 +65,7 @@ func GetTemplate() *template.Template {
 		path.Join(tPath, "book", "book.html"),
 		path.Join(tPath, "user", "history.html"),
 		path.Join(tPath, "user", "wishlist.html"),
+		path.Join(tPath, "email", "signup.html"),
 	))
 }
 

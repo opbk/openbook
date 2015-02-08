@@ -19,6 +19,7 @@ github.com/cihub/seelog \
 github.com/mattes/migrate \
 github.com/jmoiron/sqlx \
 github.com/astaxie/beego/orm \
+github.com/goamz/goamz/aws \
 
 dependencies_paths := $(addprefix $(GOPATH)/src/,$(dependencies))
 $(dependencies_paths):

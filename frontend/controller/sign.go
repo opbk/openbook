@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"bytes"
 	"net/http"
 	"time"
 
 	"github.com/gorilla/mux"
 
+	"github.com/opbk/openbook/common/mail"
 	"github.com/opbk/openbook/common/model/user"
 	"github.com/opbk/openbook/common/web"
 	"github.com/opbk/openbook/common/web/auth"
@@ -61,4 +63,15 @@ func (c *SignController) SignOut(rw http.ResponseWriter, req *http.Request) {
 	auth.Delete(rw, req)
 
 	http.Redirect(rw, req, request.GetString("from", "/"), http.StatusFound)
+}
+
+func (c *SignController) sendEmail(u *user.User) {
+	go func() {
+		body := bytes.NewBuffer([]byte{})
+		c.Template().ExecuteTemplate(body, "email_signup", map[string]interface{}{
+			"user": u,
+		})
+
+		mail.SendTo(u.Email, "Добро пожаловать в нашу библиотеку", body.String())
+	}()
 }
