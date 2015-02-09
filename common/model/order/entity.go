@@ -3,15 +3,19 @@ package order
 import "time"
 
 const (
-	NEW         = "new"
-	IN_PROGRESS = "in_progress"
+	NEW        = "new"
+	INPROGRESS = "inprogress"
+	DELIVERED  = "delivered"
+	ONHAND     = "onhand"
+	RETURNED   = "returned"
 )
 
 type Order struct {
-	Id        int64     `json:"id"`
-	UserId    int64     `json:"user_id"`
-	AddressId int64     `json:"address_id"`
-	Status    string    `json:"status"`
-	Comment   string    `json:"comment"`
-	Updated   time.Time `json:"updated"`
+	Id        int64
+	UserId    int64
+	AddressId int64
+	Status    string
+	Comment   string
+	Created   time.Time
+	Modified  time.Time
 }
