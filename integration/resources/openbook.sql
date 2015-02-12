@@ -75,3 +75,22 @@ INSERT INTO books (series_id, publisher_id, title, pages, language, release, cre
 
 INSERT INTO books (series_id, publisher_id, title, pages, language, release, created, short, description, service_review, critics_review)
 VALUES (0, 5, 'Factory Man: How One Furniture Maker Battled Offshoring, Stayed Local - and Helped Save an American Town',  464, 'Английский', '2014-07-15', NOW(), '<p>The Bassett Furniture Company was once the world biggest wood furniture manufacturer. Run by the same powerful Virginia family for generations, it was also the center of life in Bassett, Virginia. But beginning in the 1980s, the first waves of Asian competition hit, and ultimately Bassett was forced to send its production overseas.</p>', '<p>The Bassett Furniture Company was once the world biggest wood furniture manufacturer. Run by the same powerful Virginia family for generations, it was also the center of life in Bassett, Virginia. But beginning in the 1980s, the first waves of Asian competition hit, and ultimately Bassett was forced to send its production overseas.</p><p>One man fought back: John Bassett III, a shrewd and determined third-generation factory man, now chairman of Vaughan-Bassett Furniture Co, which employs more than 700 Virginians and has sales of more than $90 million. In FACTORY MAN, Beth Macy brings to life Bassett deeply personal furniture and family story, along with a host of characters from an industry that was as cutthroat as it was colorful. As she shows how he uses legal maneuvers, factory efficiencies, and sheer grit and cunning to save hundreds of jobs, she also reveals the truth about modern industry in America.</p>', '', '');
+
+INSERT INTO users (email, password, name, created, last_enter) VALUES ('netw00rk@gmail.com', '12345', 'UserName', NOW(), NOW());
+
+ALTER SEQUENCE auto_id_orders RESTART WITH 471
+
+INSERT INTO orders (user_id, address_id, status, comment) VALUES (1, 0, 'returned', '');
+INSERT INTO book_orders (order_id, book_id) VALUES (1, 1);
+
+INSERT INTO orders (user_id, address_id, status, comment) VALUES (1, 0, 'onhand', '');
+INSERT INTO book_orders (order_id, book_id) VALUES (2, 2);
+
+INSERT INTO book_orders (order_id, book_id) VALUES (3, 3);
+INSERT INTO orders (user_id, address_id, status, comment) VALUES (1, 0, 'delivered', '');
+
+INSERT INTO book_orders (order_id, book_id) VALUES (4, 4);
+INSERT INTO orders (user_id, address_id, status, comment) VALUES (1, 0, 'inprogress', '');
+
+INSERT INTO orders (user_id, address_id, status, comment) VALUES (1, 0, 'new', '');
+INSERT INTO book_orders (order_id, book_id) VALUES (5, 5);

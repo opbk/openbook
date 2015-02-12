@@ -7,7 +7,9 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"github.com/opbk/openbook/common/configuration"
 	"github.com/opbk/openbook/common/mail"
+	"github.com/opbk/openbook/common/model/book/category"
 	"github.com/opbk/openbook/common/model/user"
 	"github.com/opbk/openbook/common/web"
 	"github.com/opbk/openbook/common/web/auth"
@@ -44,6 +46,7 @@ func (c *SignController) Sign(rw http.ResponseWriter, req *http.Request) {
 				u.Modified = time.Now()
 				u.LastEnter = time.Now()
 				u.Save()
+				c.sendEmail(u)
 			} else {
 				u = f.User
 			}
@@ -67,9 +70,19 @@ func (c *SignController) SignOut(rw http.ResponseWriter, req *http.Request) {
 
 func (c *SignController) sendEmail(u *user.User) {
 	go func() {
+		categories := category.ListChildCategories(0)
+		top := make([]*category.Category, 0)
+		if len(categories) > 5 {
+			top = categories[0:5]
+		} else {
+			top = categories
+		}
+
 		body := bytes.NewBuffer([]byte{})
 		c.Template().ExecuteTemplate(body, "email_signup", map[string]interface{}{
-			"user": u,
+			"user":       u,
+			"categories": top,
+			"domain":     configuration.GetConfig().Main.Domain,
 		})
 
 		mail.SendTo(u.Email, "Добро пожаловать в нашу библиотеку", body.String())

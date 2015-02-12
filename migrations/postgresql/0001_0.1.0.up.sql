@@ -127,7 +127,7 @@ CREATE SEQUENCE auto_id_orders;
 CREATE TABLE orders (
   id INTEGER NOT NULL PRIMARY KEY DEFAULT nextval('auto_id_orders'),
   user_id INTEGER NOT NULL,
-  address_id INTEGER NOT NULL,
+  address_id INTEGER NOT NULL DEFAULT 0,
   status CHARACTER VARYING(50) NOT NULL,
   comment TEXT,
   created TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -139,7 +139,7 @@ CREATE TRIGGER update_orders_modtime BEFORE UPDATE ON orders FOR EACH ROW EXECUT
 CREATE TABLE book_orders (
 	order_id INTEGER NOT NULL,
 	book_id INTEGER NOT NULL,
-	price_type_id INTEGER NOT NULL,
+	price_type_id INTEGER NOT NULL DEFAULT 0,
 	PRIMARY KEY (order_id, book_id)
 );
 CREATE INDEX book_orders_bid_idx on book_orders (book_id);

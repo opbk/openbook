@@ -54,8 +54,8 @@ func (s *TestSuit) TearDownSuite(c *check.C) {
 	connection().Exec("TRUNCATE author_books")
 }
 
-func (s *TestSuit) TestIterateRows(c *check.C) {
-	book := List(1, 0)[0]
+func (s *TestSuit) TestBook(c *check.C) {
+	book := Find(1)
 	c.Assert(book.Id, check.Equals, int64(1))
 	c.Assert(book.Title, check.Equals, "The Martian")
 	c.Assert(book.Pages, check.Equals, 600)

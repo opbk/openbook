@@ -3,18 +3,21 @@ package book
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 
 	logger "github.com/cihub/seelog"
+
+	"github.com/opbk/openbook/common/arrays"
 	"github.com/opbk/openbook/common/db"
 	"github.com/opbk/openbook/common/model/book/price"
 )
 
 const (
-	FIND   = "SELECT id, title, pages, language, short, description, service_review, critics_review, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id WHERE id = $1 GROUP BY id"
-	LIST   = "SELECT id, title, pages, language, short, description, service_review, critics_review, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id GROUP BY id LIMIT $1 OFFSET $2"
-	INSERT = "INSERT INTO books(title, pages, language, short, description, service_review, critics_review, release, created, series_id, publisher_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id"
-	UPDATE = "UPDATE books SET title = $1, pages = $2, language = $3, language = $4, description = $5, service_review = $6, critics_review = $7, release = $8, release = $9, series_id = $10, publisher_id = $11 WHERE id = $12"
-	DELETE = "DELETE FROM books WHERE id = $1"
+	FIND       = "SELECT id, title, pages, language, short, description, service_review, critics_review, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id WHERE id = $1 GROUP BY id"
+	LIST_BY_ID = "SELECT id, title, pages, language, short, description, service_review, critics_review, release, created, series_id, publisher_id, array_agg(DISTINCT author_id) as authors_id, array_agg(DISTINCT category_id) as categories_id FROM books LEFT JOIN book_categories as bc ON id = bc.book_id LEFT JOIN author_books as ab ON id = ab.book_id WHERE id IN (%s) GROUP BY id"
+	INSERT     = "INSERT INTO books(title, pages, language, short, description, service_review, critics_review, release, created, series_id, publisher_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id"
+	UPDATE     = "UPDATE books SET title = $1, pages = $2, language = $3, language = $4, description = $5, service_review = $6, critics_review = $7, release = $8, release = $9, series_id = $10, publisher_id = $11 WHERE id = $12"
+	DELETE     = "DELETE FROM books WHERE id = $1"
 )
 
 const (
@@ -63,13 +66,23 @@ func interateRows(rows *sql.Rows) []*Book {
 	return books
 }
 
-func List(limit, offset int) []*Book {
-	rows, err := connection().Query(LIST, limit, offset)
-	if err != nil {
-		logger.Errorf("Database error while getting list of books: %s", err)
+func iterateRowsToMap(rows *sql.Rows) map[int64]*Book {
+	books := make(map[int64]*Book)
+	for rows.Next() {
+		book := scanRow(rows)
+		books[book.Id] = book
 	}
 
-	return interateRows(rows)
+	return books
+}
+
+func MapById(ids []int64) map[int64]*Book {
+	rows, err := connection().Query(fmt.Sprintf(LIST_BY_ID, strings.Join(arrays.Int64ToString(ids), ",")))
+	if err != nil {
+		logger.Errorf("Database error while getting map of books: %s", err)
+	}
+
+	return iterateRowsToMap(rows)
 }
 
 func Search(filter map[string]interface{}, limit, offset int) []*Book {

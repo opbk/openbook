@@ -36,6 +36,7 @@ type EmailSender struct {
 type Main struct {
 	LogFile string
 	MaxProc int
+	Domain  string
 }
 
 type Config struct {
@@ -73,6 +74,7 @@ from = noreply@opbook.rog
 [main]
 logfile = seelog.xml
 maxproc = 8
+domain = opbook.org
 `
 
 var cfg Config

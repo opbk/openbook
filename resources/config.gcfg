@@ -6,7 +6,7 @@ connection = postgres://developer:developer@localhost/openbook
 httpport     = 8089
 templatepath = resources/frontend/templates/
 staticpath   = resources/frontend/static/
-uploadpath   = resources/frontend/templates/
+uploadpath   = build/frontend/var/lib/openbook/frontend/upload
 
 [backend]
 httpport     = 8090
@@ -18,9 +18,9 @@ accesskey =
 secretkey = 
 
 [emailsender]
-from = noreply@opbook.rog
+from = noreply@opbook.org
 
 [main]
 logfile = seelog.xml
 maxproc = 8
-`
+domain = opbook.org

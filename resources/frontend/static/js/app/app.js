@@ -1,5 +1,6 @@
 'use strict';
 
 angular.module('App', [
-	'slick'
+	'slick',
+	'ui.bootstrap'
 ]);

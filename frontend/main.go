@@ -11,6 +11,7 @@ import (
 
 	"github.com/opbk/openbook/common/configuration"
 	"github.com/opbk/openbook/common/db"
+	"github.com/opbk/openbook/common/mail"
 	"github.com/opbk/openbook/frontend/controller"
 )
 
@@ -44,6 +45,8 @@ func main() {
 	runtime.GOMAXPROCS(config.Main.MaxProc)
 	initLogging(config)
 	initDataBases(config)
+
+	mail.InitMailSender(config)
 
 	router := mux.NewRouter()
 	initStaticHandler(router, config)

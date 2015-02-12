@@ -12,6 +12,7 @@ const (
 
 type Order struct {
 	Id        int64
+	BookId    int64
 	UserId    int64
 	AddressId int64
 	Status    string
