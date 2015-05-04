@@ -70,7 +70,7 @@ func CountByUser(id int64) int {
 	return count
 }
 
-func AddOrderBook(id, bookId int) {
+func AddOrderBook(id, bookId int64) {
 	_, err := connection().Exec(ADD_ORDER_BOOK, id, bookId)
 	if err != nil {
 		logger.Errorf("Database error while inserting order: %s", err)

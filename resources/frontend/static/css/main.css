@@ -29,7 +29,6 @@ body {
 
 .footer .cc {
 	color: #c3c3c3;
-	margin-top: 50px;
 }
 
 .pagination>li>a, .pagination>li>span {
@@ -333,6 +332,14 @@ body {
 	font-weight: normal;
 }
 
+.order-book {
+	margin-bottom: 20px;
+}
+
+.order-book table {
+	margin-top: 10px;
+}
+
 .order-book .cover {
 	width: 110px;
 }
@@ -352,14 +359,27 @@ body {
 }
 
 .order-shiping {
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 }
 
-.order-membership {
+.order-shiping fieldset {
+	margin: 10px 0 0 0;
+}
+
+.order-shiping label {
+	font-weight: normal !important;
+}
+
+.order-shiping .glyphicon {
+	margin-left: 20px;
+	cursor: pointer;
+}
+
+.order-subscription {
 	margin-bottom: 40px;
 }
 
-.order-membership p {
+.order-subscription p {
 	margin: 10px 0 0 10px;
 }
 

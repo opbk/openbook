@@ -15,7 +15,7 @@
 							</td>
 							<td class="status text-primary">
 								{% if eq $order.Status "new" %}
-									<p class="text-primary">Новый</p>
+									<p class="text-primary">Проверяется</p>
 								{% else if eq $order.Status "inprogress" %}
 									<p class="text-primary">Обрабатывается</p>
 								{% else if eq $order.Status "delivered" %}

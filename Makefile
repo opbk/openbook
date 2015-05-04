@@ -27,20 +27,6 @@ $(dependencies_paths):
 
 dependencies: $(dependencies_paths)
 
-build_backend: dependencies
-	rm -rf $(BUILD_DIR)/backend
-	$(GO) build -o $(BUILD_DIR)/backend/usr/lib/openbook/backend/backend $(PROJECT)/backend
-	mkdir -p $(BUILD_DIR)/backend/usr/lib/openbook/backend/templates
-	mkdir -p $(BUILD_DIR)/backend/etc/openbook/backend/
-	mkdir -p $(BUILD_DIR)/backend/etc/init.d/
-	cp -r resources/backend/templates $(BUILD_DIR)/backend/usr/lib/openbook/backend/templates
-	cp resources/config.gcfg $(BUILD_DIR)/backend/etc/openbook/backend/config.gcfg
-	cp resources/seelog.xml $(BUILD_DIR)/backend/etc/openbook/backend/seelog.xml
-	cp -r deb/backend/* $(BUILD_DIR)/backend/
-
-deb_backend: build_backend
-	fakeroot dpkg-deb --build build/backend backend_$(VERSION)_amd64.deb
-
 build_frontend: dependencies
 	rm -rf $(BUILD_DIR)/frontend
 	$(GO) build -o $(BUILD_DIR)/frontend/usr/lib/openbook/frontend/frontend $(PROJECT)/frontend
@@ -49,8 +35,8 @@ build_frontend: dependencies
 	mkdir -p $(BUILD_DIR)/frontend/etc/init.d/
 	cp -r resources/frontend/templates $(BUILD_DIR)/frontend/usr/lib/openbook/frontend
 	cp -r resources/frontend/static $(BUILD_DIR)/frontend/usr/lib/openbook/frontend
-	cp resources/config.gcfg $(BUILD_DIR)/frontend/etc/openbook/frontend/config.gcfg
-	cp resources/seelog.xml $(BUILD_DIR)/frontend/etc/openbook/frontend/seelog.xml
+	cp resources/config/config.example.gcfg $(BUILD_DIR)/frontend/etc/openbook/frontend/config.gcfg
+	cp resources/config/seelog.example.xml $(BUILD_DIR)/frontend/etc/openbook/frontend/seelog.xml
 	cp -r deb/frontend/* $(BUILD_DIR)/frontend/
 
 deb_frontend: build_frontend

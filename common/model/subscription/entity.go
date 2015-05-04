@@ -5,4 +5,5 @@ type Subscription struct {
 	Name        string
 	Description string
 	Price       float64
+	Enabled     bool
 }

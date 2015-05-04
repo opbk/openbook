@@ -24,7 +24,7 @@ func (s *SignupTestSuit) SetUpTest(c *check.C) {
 	db.Connection().Exec("ALTER SEQUENCE auto_id_users RESTART WITH 1")
 	db.Connection().Exec("TRUNCATE users")
 
-	(&user.User{0, "netw00rk@gmail.com", "123456", "A. Koklin", time.Now(), time.Now(), time.Now()}).Save()
+	(&user.User{0, "netw00rk@gmail.com", "123456", "A. Koklin", "89161234567", time.Now(), time.Now(), time.Now()}).Save()
 }
 
 func (s *SignupTestSuit) TearDownSuite(c *check.C) {

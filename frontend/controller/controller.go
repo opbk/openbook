@@ -44,7 +44,12 @@ func (c *FrontendController) Template(tpl ...*template.Template) *template.Templ
 }
 
 func (c *FrontendController) ExecuteTemplate(rw http.ResponseWriter, req *http.Request, name string, params map[string]interface{}) {
-	params["user"] = c.getUser(req)
+	user := c.getUser(req)
+	params["user"] = user
+	if user != nil {
+		params["subscription"] = user.Subscription()
+	}
+
 	params["location"] = req.URL.String()
 	c.Template().ExecuteTemplate(rw, name, params)
 }
@@ -65,6 +70,7 @@ func GetTemplate() *template.Template {
 		path.Join(tPath, "book", "book.html"),
 		path.Join(tPath, "user", "history.html"),
 		path.Join(tPath, "user", "wishlist.html"),
+		path.Join(tPath, "user", "subscribe.html"),
 		path.Join(tPath, "email", "signup.html"),
 	))
 }
@@ -76,6 +82,8 @@ func GetControllers() []web.Controller {
 		NewBookController(),
 		NewOrderController(),
 		NewUserController(),
+		NewAddressController(),
+		NewSubscriptionController(),
 	}
 
 	return controllers

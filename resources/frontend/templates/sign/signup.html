@@ -7,7 +7,7 @@
 					<h3>Вход в библиотеку</h3>
 					<div class="form-group">
 						<label for="email" class="control-label">Укажите ваш email адрес&nbsp;</label>
-						<input type="email" class="form-control input-sm" id="email" name="email" placeholder="Email адрес" ng-model="form.email" required autofocus/>
+						<input type="email" class="form-control input-sm" id="email" name="email" placeholder="Email адрес" ng-init="form.email = '{% $.form.Email %}'" ng-model="form.email" required autofocus/>
 					</div>
 					<p class="text-danger" ng-init="form.error.email = '{% .form.Error "Email" %}'">{{ form.error.email }}</p>
 				</div>

@@ -27,7 +27,7 @@ func (s *TestSuit) SetUpTest(c *check.C) {
 	connection().Exec("ALTER SEQUENCE auto_id_users RESTART WITH 1")
 	connection().Exec("TRUNCATE users")
 
-	(&User{0, "netw00rk@gmail.com", "123456", "A. Koklin", time.Now(), time.Now(), time.Now()}).Save()
+	(&User{0, "netw00rk@gmail.com", "123456", "A. Koklin", "89161234567", time.Now(), time.Now(), time.Now()}).Save()
 }
 
 func (s *TestSuit) TearDownSuite(c *check.C) {
@@ -40,6 +40,7 @@ func (s *TestSuit) TestFind(c *check.C) {
 	c.Assert(u.Email, check.Equals, "netw00rk@gmail.com")
 	c.Assert(u.Password, check.Equals, "123456")
 	c.Assert(u.Name, check.Equals, "A. Koklin")
+	c.Assert(u.Phone, check.Equals, "89161234567")
 }
 
 func (s *TestSuit) TestFindByEmail(c *check.C) {

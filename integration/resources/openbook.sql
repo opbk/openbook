@@ -1,3 +1,6 @@
+INSERT INTO subscriptions (id, name, description, price) VALUES (1, 'Обычная подписка, 1 месяц', 'Обычная подписка, 1 месяц', 490);
+INSERT INTO subscriptions (id, name, description, price) VALUES (2, 'Обычная подписка, 3 месяця', 'Обычная подписка, 3 месяця', 1450);
+INSERT INTO subscriptions (id, name, description, price) VALUES (3, 'Обычная подписка, 6 месяця', 'Обычная подписка, 6 месяця', 2800);
 
 INSERT INTO categories (parent_id, path, name, books) VALUES (0, '', 'Бизнес и деньги', 5);
 INSERT INTO categories (parent_id, path, name, books) VALUES (1, '1', 'Индустрия', 5);
@@ -77,20 +80,7 @@ INSERT INTO books (series_id, publisher_id, title, pages, language, release, cre
 VALUES (0, 5, 'Factory Man: How One Furniture Maker Battled Offshoring, Stayed Local - and Helped Save an American Town',  464, 'Английский', '2014-07-15', NOW(), '<p>The Bassett Furniture Company was once the world biggest wood furniture manufacturer. Run by the same powerful Virginia family for generations, it was also the center of life in Bassett, Virginia. But beginning in the 1980s, the first waves of Asian competition hit, and ultimately Bassett was forced to send its production overseas.</p>', '<p>The Bassett Furniture Company was once the world biggest wood furniture manufacturer. Run by the same powerful Virginia family for generations, it was also the center of life in Bassett, Virginia. But beginning in the 1980s, the first waves of Asian competition hit, and ultimately Bassett was forced to send its production overseas.</p><p>One man fought back: John Bassett III, a shrewd and determined third-generation factory man, now chairman of Vaughan-Bassett Furniture Co, which employs more than 700 Virginians and has sales of more than $90 million. In FACTORY MAN, Beth Macy brings to life Bassett deeply personal furniture and family story, along with a host of characters from an industry that was as cutthroat as it was colorful. As she shows how he uses legal maneuvers, factory efficiencies, and sheer grit and cunning to save hundreds of jobs, she also reveals the truth about modern industry in America.</p>', '', '');
 
 INSERT INTO users (email, password, name, created, last_enter) VALUES ('netw00rk@gmail.com', '12345', 'UserName', NOW(), NOW());
+INSERT INTO users (email, password, name, created, last_enter) VALUES ('akoklin@opbook.org', '12345', 'UserName', NOW(), NOW());
+INSERT INTO user_subscriptions (user_id, subscription_id, expiration) VALUES (2, 2, '2015-08-01');
 
-ALTER SEQUENCE auto_id_orders RESTART WITH 471
-
-INSERT INTO orders (user_id, address_id, status, comment) VALUES (1, 0, 'returned', '');
-INSERT INTO book_orders (order_id, book_id) VALUES (1, 1);
-
-INSERT INTO orders (user_id, address_id, status, comment) VALUES (1, 0, 'onhand', '');
-INSERT INTO book_orders (order_id, book_id) VALUES (2, 2);
-
-INSERT INTO book_orders (order_id, book_id) VALUES (3, 3);
-INSERT INTO orders (user_id, address_id, status, comment) VALUES (1, 0, 'delivered', '');
-
-INSERT INTO book_orders (order_id, book_id) VALUES (4, 4);
-INSERT INTO orders (user_id, address_id, status, comment) VALUES (1, 0, 'inprogress', '');
-
-INSERT INTO orders (user_id, address_id, status, comment) VALUES (1, 0, 'new', '');
-INSERT INTO book_orders (order_id, book_id) VALUES (5, 5);
+ALTER SEQUENCE auto_id_orders RESTART WITH 471;

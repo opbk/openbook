@@ -29,7 +29,7 @@ func (s *TestSuit) SetUpTest(c *check.C) {
 	connection().Exec("TRUNCATE subscriptions")
 	connection().Exec("TRUNCATE user_subscriptions")
 
-	sub := &subscription.Subscription{0, "Basic subscription", "Basic one month subscription", 490}
+	sub := &subscription.Subscription{0, "Basic subscription", "Basic one month subscription", 490, true}
 	sub.Save()
 
 	(&UserSubscription{*sub, 1, time.Now()}).Insert()

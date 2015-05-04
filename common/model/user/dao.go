@@ -6,15 +6,16 @@ import (
 	logger "github.com/cihub/seelog"
 
 	"github.com/opbk/openbook/common/db"
+	"github.com/opbk/openbook/common/model/user/address"
 	"github.com/opbk/openbook/common/model/user/subscription"
 )
 
 const (
-	LIST          = "SELECT id, email, password, name, created, modified, last_enter FROM users"
-	FIND          = "SELECT id, email, password, name, created, modified, last_enter FROM users WHERE id = $1"
-	FIND_BY_EMAIL = "SELECT id, email, password, name, created, modified, last_enter FROM users WHERE email = $1"
-	INSERT        = "INSERT INTO users (email, password, name, created, last_enter) VALUES ($1, $2, $3, $4, $5) RETURNING id"
-	UPDATE        = "UPDATE users SET email = $1, password = $2, name = $3, created = $4, last_enter = $6 WHERE id = $7"
+	LIST          = "SELECT id, email, password, name, phone, created, modified, last_enter FROM users"
+	FIND          = "SELECT id, email, password, name, phone, created, modified, last_enter FROM users WHERE id = $1"
+	FIND_BY_EMAIL = "SELECT id, email, password, name, phone, created, modified, last_enter FROM users WHERE email = $1"
+	INSERT        = "INSERT INTO users (email, password, name, phone, created, last_enter) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id"
+	UPDATE        = "UPDATE users SET email = $1, password = $2, name = $3, phone = $4, created = $5, last_enter = $6 WHERE id = $7"
 	DELETE        = "DELETE FROM users WHERE id = $1"
 )
 
@@ -24,7 +25,7 @@ func connection() *sql.DB {
 
 func scanRow(scaner db.RowScanner) *User {
 	var user *User = new(User)
-	err := scaner.Scan(&user.Id, &user.Email, &user.Password, &user.Name, &user.Created, &user.Modified, &user.LastEnter)
+	err := scaner.Scan(&user.Id, &user.Email, &user.Password, &user.Name, &user.Phone, &user.Created, &user.Modified, &user.LastEnter)
 	if err != nil {
 		logger.Errorf("Can't scan row: %s", err)
 	}
@@ -62,6 +63,10 @@ func (u *User) Subscription() *subscription.UserSubscription {
 	return subscription.FindByUser(u.Id)
 }
 
+func (u *User) Addresses() []*address.Address {
+	return address.ListByUser(u.Id)
+}
+
 func (u *User) Save() {
 	if u.Id != 0 {
 		u.update()
@@ -71,14 +76,14 @@ func (u *User) Save() {
 }
 
 func (u *User) update() {
-	_, err := connection().Exec(UPDATE, u.Email, u.Password, u.Name, u.Created, u.LastEnter, u.Id)
+	_, err := connection().Exec(UPDATE, u.Email, u.Password, u.Name, u.Phone, u.Created, u.LastEnter, u.Id)
 	if err != nil {
 		logger.Errorf("Database error while updating user %d: %s", u.Id, err)
 	}
 }
 
 func (u *User) insert() {
-	err := connection().QueryRow(INSERT, u.Email, u.Password, u.Name, u.Created, u.LastEnter).Scan(&u.Id)
+	err := connection().QueryRow(INSERT, u.Email, u.Password, u.Name, u.Phone, u.Created, u.LastEnter).Scan(&u.Id)
 	if err != nil {
 		logger.Errorf("Database error while inserting user: %s", err)
 	}

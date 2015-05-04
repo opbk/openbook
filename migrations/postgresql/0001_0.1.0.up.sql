@@ -81,7 +81,8 @@ CREATE TABLE users (
   id INTEGER NOT NULL PRIMARY KEY DEFAULT nextval('auto_id_users'),
   email CHARACTER VARYING(250) NOT NULL,
   password CHARACTER VARYING(250),
-  name TEXT,
+  name TEXT DEFAULT '',
+  phone CHARACTER VARYING(250) DEFAULT '',
   created TIMESTAMP NOT NULL DEFAULT NOW(),
   modified TIMESTAMP NOT NULL DEFAULT NOW(),
   last_enter TIMESTAMP NOT NULL DEFAULT NOW()
@@ -103,14 +104,15 @@ CREATE SEQUENCE auto_id_subscriptions;
 CREATE TABLE subscriptions (
   id INTEGER NOT NULL PRIMARY KEY DEFAULT nextval('auto_id_subscriptions'),
   name CHARACTER VARYING(250) NOT NULL,
-  description TEXT,
-  price NUMERIC NOT NULL
+  description TEXT DEFAULT '',
+  price NUMERIC NOT NULL,
+  enabled BOOLEAN DEFAULT true
 );
 
 CREATE TABLE user_subscriptions (
 	user_id INTEGER NOT NULL,
 	subscription_id INTEGER NOT NULL,
-	expiration DATE,
+	expiration TIMESTAMP,
 	PRIMARY KEY (user_id, subscription_id)
 );
 CREATE INDEX user_subscriptions_sid_idx on user_subscriptions (subscription_id);
