@@ -1,9 +1,0 @@
-Package: openbook-backend
-Version: 0.1
-Section: misc
-Priority: optional
-Architecture: amd64
-Depends: adduser
-Maintainer: OpenBook <cto@opbook.org>
-Description: openbook-backend
-

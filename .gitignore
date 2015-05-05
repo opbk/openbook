@@ -1,3 +1,4 @@
 build
+*.deb
 openbook.sublime-workspace
 openbook.sublime-project

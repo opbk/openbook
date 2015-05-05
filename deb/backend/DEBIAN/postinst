@@ -1,7 +1,0 @@
-#!/bin/sh -e
-
-mkdir -p /var/log/openbook/
-chown openbook:openbook /var/log/openbook/
-
-update-rc.d -f openbook-backend defaults
-service openbook-backend start &
