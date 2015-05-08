@@ -24,3 +24,4 @@ from = noreply@opbook.org
 logfile = ./build/frontend/etc/openbook/frontend/seelog.xml
 maxproc = 8
 domain = opbook.org
+infoemail = info@opbook.org

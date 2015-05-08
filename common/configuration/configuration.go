@@ -36,9 +36,10 @@ type EmailSender struct {
 }
 
 type Main struct {
-	LogFile string
-	MaxProc int
-	Domain  string
+	LogFile   string
+	MaxProc   int
+	Domain    string
+	InfoEmail string
 }
 
 type Config struct {

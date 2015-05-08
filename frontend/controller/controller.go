@@ -72,6 +72,8 @@ func GetTemplate() *template.Template {
 		path.Join(tPath, "user", "wishlist.html"),
 		path.Join(tPath, "user", "subscribe.html"),
 		path.Join(tPath, "email", "signup.html"),
+		path.Join(tPath, "email", "user_order.html"),
+		path.Join(tPath, "email", "admin_order.html"),
 	))
 }
 
