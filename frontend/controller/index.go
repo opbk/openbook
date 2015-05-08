@@ -16,13 +16,13 @@ func NewIndexController() *IndexController {
 
 func (c *IndexController) Routes(router *mux.Router) {
 	router.HandleFunc("/", c.Index)
-	router.HandleFunc("/howitworks", c.HowItWorks)
+	router.HandleFunc("/about", c.About)
 }
 
 func (c *IndexController) Index(rw http.ResponseWriter, req *http.Request) {
 	http.Redirect(rw, req, "/search", http.StatusFound)
 }
 
-func (c *IndexController) HowItWorks(rw http.ResponseWriter, req *http.Request) {
-	c.ExecuteTemplate(rw, req, "howitworks", map[string]interface{}{})
+func (c *IndexController) About(rw http.ResponseWriter, req *http.Request) {
+	c.ExecuteTemplate(rw, req, "about", map[string]interface{}{})
 }

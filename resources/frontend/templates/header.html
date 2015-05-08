@@ -45,7 +45,7 @@
 					{% else %}
 						<span class="pull-right top-crumb"><a href="/signout?from={% .location %}">Выход</a></span>
 					{% end %}
-					<span class="pull-right top-crumb">Звоните нам (888) 283-5051</span>
+					<span class="pull-right top-crumb">Звоните нам (925) 849-5222</span>
 					{% if .user %}
 						<span class="pull-right top-crumb dropdown" dropdown>
 							<a href class="dropdown-toggle" dropdown-toggle><b>Привет, {% if .user.Name %}{% .user.Name %}{% else %}Юзернейм{% end %}!</b></a>
@@ -66,7 +66,7 @@
 					<nav class="main">
 						<ul class="nav nav-pills">
 							<li><a href="/">&nbsp;</a></li>
-							<li><a href="/howitworks">Как это работает</a></li>
+							<li><a href="/about">Как это работает</a></li>
 							<li><a href="/search">Каталог книг</a></li>
 						</ul>
 					</nav>
@@ -74,7 +74,7 @@
 				<div class="col-xs-4">
 					<form class="form-horizontal search" role="search" method="get" action="/search">
 						<div class="form-group">
-							<input type="text" class="form-control input-sm" placeholder="Найди хорошую книгу!" name="s" value="{% .search %}">
+							<input type="text" class="form-control input-sm" placeholder="Найти книгу" name="s" value="{% .search %}">
 						</div>
 					</form>
 				</div>

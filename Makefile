@@ -104,6 +104,4 @@ migrate: migrate_down migrate_up
 
 clear:
 	rm -rf build
-
-clear_deb:
 	rm -f *.deb

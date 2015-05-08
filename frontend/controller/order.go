@@ -9,8 +9,6 @@ import (
 	"github.com/opbk/openbook/common/model/book"
 	"github.com/opbk/openbook/common/model/order"
 	"github.com/opbk/openbook/common/model/subscription"
-	"github.com/opbk/openbook/common/model/user"
-	"github.com/opbk/openbook/common/model/user/address"
 	"github.com/opbk/openbook/common/web"
 	"github.com/opbk/openbook/common/web/auth"
 	"github.com/opbk/openbook/common/web/form/utils"
@@ -75,28 +73,4 @@ func (c *OrderController) Order(rw http.ResponseWriter, req *http.Request) {
 		"subscriptions": subscriptions,
 		"form":          f,
 	})
-}
-
-func (c *SignController) sendOrderEmail(orderId int64) {
-	go func() {
-		o := order.Find(id)
-		book := book.Find(o.BookId)
-		user := user.Find(o.UserId)
-		address := address.Find(o.AddressId)
-
-		templateFabric := func(name) {
-			body := bytes.NewBuffer([]byte{})
-			c.Template().ExecuteTemplate(body, "email_order_user", map[string]interface{}{
-				"user":    user,
-				"book":    book,
-				"address": address,
-				"domain":  configuration.GetConfig().Main.Domain,
-			})
-			return body.String()
-		}
-
-		mail.SendTo(user.Email, "Информация о сделанном заказе", templateFabric("email_order_user"))
-		mail.SendTo(configuration.GetConfig().Main.InfoEmail, "Поступление нового заказа", templateFabric("email_order_admin"))
-	}()
-
 }

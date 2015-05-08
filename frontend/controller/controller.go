@@ -63,7 +63,7 @@ func GetTemplate() *template.Template {
 	return template.Must(template.New("index").Funcs(tfns).Delims("{%", "%}").ParseFiles(
 		path.Join(tPath, "header.html"),
 		path.Join(tPath, "footer.html"),
-		path.Join(tPath, "howitworks.html"),
+		path.Join(tPath, "about.html"),
 		path.Join(tPath, "order.html"),
 		path.Join(tPath, "sign", "signup.html"),
 		path.Join(tPath, "book", "search.html"),
