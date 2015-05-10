@@ -23,6 +23,7 @@ func scanRow(scaner db.RowScanner) *UserSubscription {
 	err := scaner.Scan(&us.Id, &us.Name, &us.Description, &us.Price, &us.UserId, &us.Expiration)
 	if err != nil {
 		logger.Errorf("Can't scan row: %s", err)
+		return nil
 	}
 
 	return us

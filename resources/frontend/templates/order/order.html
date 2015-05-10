@@ -93,7 +93,7 @@
 				<div class="row panel panel-default order-subscription">
 					<div class="panel-heading"><strong>Информация о подписке</strong></div>
 					<div class="panel-body">
-						{% if $.subscription.Id %}
+						{% if $.subscription %}
 							<p>{% $.subscription.Name %}. Действительна до {% $.subscription.Expiration.Format "01.02.2006" %}</p>	
 						{% else %}
 							<p>Подписка не оформлена. Для того чтобы взять книгу выберите один из следующих вариантов подписки:

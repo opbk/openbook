@@ -49,7 +49,7 @@ func (c *BookController) Book(rw http.ResponseWriter, req *http.Request) {
 
 	dueDate := time.Now().AddDate(0, 1, 0)
 	if user := c.getUser(req); user != nil {
-		if s := user.Subscription(); s.Id != 0 {
+		if s := user.Subscription(); s != nil {
 			dueDate = s.Expiration
 		}
 	}

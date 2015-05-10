@@ -61,11 +61,12 @@ func (c *OrderController) Order(rw http.ResponseWriter, req *http.Request) {
 			order.AddOrderBook(o.Id, f.Book)
 			c.sendOrderEmail(o.Id)
 
-			if user.Subscription().Id == 0 && f.Subscription != 0 {
+			if user.Subscription() == nil && f.Subscription != 0 {
 				http.Redirect(rw, req, fmt.Sprintf("/user/me/subscribe/%d", f.Subscription), http.StatusFound)
 			} else {
 				http.Redirect(rw, req, "/user/me/history", http.StatusFound)
 			}
+			return
 		}
 	}
 
@@ -109,10 +110,12 @@ func (c *OrderController) History(rw http.ResponseWriter, req *http.Request) {
 		booksId[i] = o.BookId
 	}
 
-	books := book.MapById(booksId)
+	books := make(map[int64]*book.Book)
 	authors := make(map[int64]*author.Author)
 	publishers := make(map[int64]*publisher.Publisher)
-	if len(books) > 0 {
+
+	if len(booksId) > 0 {
+		books = book.MapById(booksId)
 		authorsId := make([]int64, len(books))
 		publishersId := make([]int64, len(books))
 		for _, book := range books {

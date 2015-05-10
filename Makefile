@@ -42,6 +42,7 @@ build_frontend: dependencies
 	cp -r deb/frontend/* $(BUILD_DIR)/frontend/
 
 package_frontend: build_frontend
+	sleep 5
 	sed -i s/Version:.*/Version:\ $(VERSION)/g $(BUILD_DIR)/frontend/DEBIAN/control
 	fakeroot dpkg-deb --build build/frontend frontend_$(VERSION)_amd64.deb
 
@@ -57,12 +58,6 @@ package_migrations: build_migrations
 	sed -i s/Version:.*/Version:\ $(VERSION)/g $(BUILD_DIR)/migrations/DEBIAN/control
 	fakeroot dpkg-deb --build $(BUILD_DIR)/migrations migrations_$(VERSION)_amd64.deb
 
-publish_migrations: package_migrations
-	$(eval PACKAGE = $(shell ls *.deb | grep migrations))
-	scp $(PACKAGE) aptly@apt.2rll.net:upload/
-	ssh aptly@apt.2rll.net aptly repo add 2rll upload/$(PACKAGE)
-	ssh apt.2rll.net -l aptly aptly publish update -gpg-key=2rll wheezy 2rll
-	rm $(PACKAGE)
 
 build: build_frontend build_migrations
 
