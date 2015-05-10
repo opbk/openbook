@@ -16,7 +16,9 @@
 						{% else if eq $order.Status "returned" %}
 							<span  class="text-muted">Возвращен</span>
 						{% end %}
-						<span class="glyphicon glyphicon-remove pull-right" aria-hidden="true" title="Отказаться от заказа" ng-click="delete({% $order.Id %})"></span> 
+						{% if eq $order.Status "new" %}
+							<span class="glyphicon glyphicon-remove pull-right" aria-hidden="true" title="Отказаться от заказа" ng-click="delete({% $order.Id %})"></span> 
+						{% end %}
 						<span class="glyphicon glyphicon-circle-arrow-down pull-right" aria-hidden="true" title="Подробности заказа" ng-click="book_show[{% $order.Id %}]=true" ng-hide="book_show[{% $order.Id %}]"></span>
 						<span class="glyphicon glyphicon-circle-arrow-up pull-right" aria-hidden="true" title="Скрыть подробности" ng-click="book_show[{% $order.Id %}]=false" ng-show="book_show[{% $order.Id %}]"></span>
 					</div>
