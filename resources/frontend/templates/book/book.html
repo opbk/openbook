@@ -1,8 +1,9 @@
 {% define "book" %}
 	{% template "header" . %}
-	<div class="row">
-		<div class="crumb col-xs-12">
-			{% if gt (len .path) 0 %}<a href="/search"><span>Все книги</span></a> : 
+	{% if gt (len .path) 0 %}
+		<div class="row">
+			<div class="crumb col-xs-12">
+				<a href="/search"><span>Все книги</span></a> : 
 				{% range $index, $category := $.path %}
 					{% if eq (len $.path) (add $index 1) %}
 						<span class="active">{% $category.Name %}</span>
@@ -10,9 +11,9 @@
 						<a href="/search?c={% $category.Id %}"><span>{% $category.Name %}</span></a> :
 					{% end %}
 				{% end %}
-			{% end %}
+			</div>
 		</div>
-	</div>
+	{% end %}
 	<div class="row book">
 		<div class="col-xs-3">
 			<img src="/upload/cover/full/{% $.book.Id %}.jpg">
@@ -42,21 +43,24 @@
 					<div class="panel panel-default price-panel text-center">
 						<div class="price-box">Розничная цена: {% (index $.prices "retail").Price %}р</div>
 						<div>
-							<a class="btn btn-danger" href="/order/{% $.book.Id %}" role="button"><b>Взять книгу до {% $.dueDate.Format "01.02.2006" %}</b></a>
+							<a class="btn btn-danger" href="/order/book/{% $.book.Id %}" role="button"><b>Взять книгу до {% $.dueDate.Format "01.02.2006" %}</b></a>
 						</div>
-						<div class="membership-box">
-							<a href="#" ng-click="hideMembership = !hideMembership">Детали подписки:</a>
-							<ul ng-hide="hideMembership">
-								<li>Стоимость базовой подписки: 490 рублей за 30 календарных дней</li>
-								<li>2 недели на возврат книги после окончания срока подписки</li>
-								<li>Сдайте и возьмите новую книгу в любой момент</li>
-								<li><a href="/about">Подробнее</a></li>
-							</ul>
-						</div>
-						<!-- <div class="separator">- или -</div>
-						<div>
-							<a class="btn btn-warning" href="/" role="button">Купить за 1000р</a>
-						</div> -->
+						{% if $.subscription %}
+						{% else %}
+							<div class="membership-box">
+								<a href="#" ng-click="hideMembership = !hideMembership">Детали подписки:</a>
+								<ul ng-hide="hideMembership">
+									<li>Стоимость базовой подписки: 490 рублей за 30 календарных дней</li>
+									<li>2 недели на возврат книги после окончания срока подписки</li>
+									<li>Сдайте и возьмите новую книгу в любой момент</li>
+									<li><a href="/about">Подробнее</a></li>
+								</ul>
+							</div>
+						{% end %}
+							<!-- <div class="separator">- или -</div>
+							<div>
+								<a class="btn btn-warning" href="/" role="button">Купить за 1000р</a>
+							</div> -->
 					</div>
 				</div>
 			</div>

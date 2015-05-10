@@ -1,6 +1,4 @@
 INSERT INTO subscriptions (id, name, description, price) VALUES (1, 'Обычная подписка, 1 месяц', 'Обычная подписка, 1 месяц', 490);
-INSERT INTO subscriptions (id, name, description, price) VALUES (2, 'Обычная подписка, 3 месяця', 'Обычная подписка, 3 месяця', 1450);
-INSERT INTO subscriptions (id, name, description, price) VALUES (3, 'Обычная подписка, 6 месяця', 'Обычная подписка, 6 месяця', 2800);
 
 INSERT INTO categories (parent_id, path, name, books) VALUES (0, '', 'Бизнес и деньги', 5);
 INSERT INTO categories (parent_id, path, name, books) VALUES (1, '1', 'Индустрия', 5);
@@ -81,6 +79,6 @@ VALUES (0, 5, 'Factory Man: How One Furniture Maker Battled Offshoring, Stayed L
 
 INSERT INTO users (email, password, name, created, last_enter) VALUES ('netw00rk@gmail.com', '12345', 'UserName', NOW(), NOW());
 INSERT INTO users (email, password, name, created, last_enter) VALUES ('akoklin@opbook.org', '12345', 'UserName', NOW(), NOW());
-INSERT INTO user_subscriptions (user_id, subscription_id, expiration) VALUES (2, 2, '2015-08-01');
+INSERT INTO user_subscriptions (user_id, subscription_id, expiration) VALUES (2, 1, '2015-08-01');
 
 ALTER SEQUENCE auto_id_orders RESTART WITH 471;

@@ -52,7 +52,6 @@ build_migrations: dependencies
 	mkdir -p $(BUILD_DIR)/migrations/usr/lib/newsgun/
 	cp -r ./migrations $(BUILD_DIR)/migrations/usr/lib/newsgun/
 	cp -r deb/migrations/* $(BUILD_DIR)/migrations
-	sleep 5
 
 package_migrations: build_migrations
 	sed -i s/Version:.*/Version:\ $(VERSION)/g $(BUILD_DIR)/migrations/DEBIAN/control
@@ -65,7 +64,7 @@ publish_migrations: package_migrations
 	ssh apt.2rll.net -l aptly aptly publish update -gpg-key=2rll wheezy 2rll
 	rm $(PACKAGE)
 
-build: build_backend build_migrations
+build: build_frontend build_migrations
 
 package: package_frontend package_migrations
 

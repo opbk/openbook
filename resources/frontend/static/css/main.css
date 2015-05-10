@@ -1,11 +1,11 @@
 html, body {
     height: 100%;
+    font-family: 'PT Sans', sans-serif;
 }
 
 body {
-	font-size: 13px;	
+	font-size: 14px;	
 	color: #333333;
-	line-height: 19px;
 }
 
 @media (min-width: 768px) {
@@ -13,6 +13,16 @@ body {
 	  width: 970px;
 	  max-width: none !important;
 	}
+}
+
+.panel-default {
+	border: none !important;
+}
+
+.panel-heading .glyphicon {
+	margin-right: 10px;
+	cursor: pointer;
+	font-size: 115%
 }
 
 .container {
@@ -231,7 +241,7 @@ body {
 .book .price-panel {
 	background: #f1f1f1;
 	padding: 19px 9px;
-	width: 239px;
+	width: 250px;
 }
 
 .book .price-panel .btn {
@@ -336,26 +346,15 @@ body {
 	margin-bottom: 20px;
 }
 
-.order-book table {
-	margin-top: 10px;
-}
-
 .order-book .cover {
 	width: 110px;
 }
 
 .order-book .title {
-	font-size: 110%;
-}
-
-.order-book .status {
-	white-space: nowrap;
+	margin: 0;
+	padding: 0 0 10px 0;
 	font-weight: bold;
-	text-align: center
-}
-
-.order-book td {
-	vertical-align: middle !important;
+	font-size: 110%;
 }
 
 .order-shiping {
@@ -381,10 +380,6 @@ body {
 
 .order-subscription p {
 	margin: 10px 0 0 10px;
-}
-
-.info {
-	font-size: 14px;
 }
 
 .info li {

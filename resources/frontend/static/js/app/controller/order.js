@@ -34,6 +34,11 @@
 				invalid = true;
 			}
 
+			if($scope.form.address == 0) {
+				$scope.form.error.address = "Укажите желаемый адрес доставки";
+				invalid = true;
+			}
+
 			if(invalid) {
 				event.preventDefault();
 			}
