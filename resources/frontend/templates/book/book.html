@@ -1,4 +1,5 @@
 {% define "book" %}
+	{% set . "title" $.book.Title %}
 	{% template "header" . %}
 	{% if gt (len .path) 0 %}
 		<div class="row">

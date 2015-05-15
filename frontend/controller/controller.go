@@ -29,6 +29,10 @@ var tfns = template.FuncMap{
 		return result
 	},
 	"html": func(a string) template.HTML { return template.HTML(a) },
+	"set": func(m map[string]interface{}, key string, value interface{}) string {
+		m[key] = value
+		return ""
+	},
 }
 
 type FrontendController struct {
