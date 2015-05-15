@@ -79,8 +79,11 @@ test:
 	$(GO) test $(PROJECT)/common/model/user/subscription -test.config="$(C)"
 	$(GO) test $(PROJECT)/common/model/user/address -test.config="$(C)"
 	$(GO) test $(PROJECT)/common/model/subscription -test.config="$(C)"
+	$(GO) test $(PROJECT)/common/model/transaction -test.config="$(C)"
 	$(GO) test $(PROJECT)/common/model/order -test.config="$(C)"
 	$(GO) test $(PROJECT)/frontend -test.config="$(C)"
+	$(GO) test $(PROJECT)/frontend/controller -test.config="$(C)"
+	$(GO) test $(PROJECT)/frontend/controller/payment -test.config="$(C)"
 	$(GO) test $(PROJECT)/frontend/form -test.config="$(C)"
 	$(GO) test $(PROJECT)/backend -test.config="$(C)"
 

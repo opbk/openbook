@@ -24,13 +24,6 @@ type Db struct {
 	Connection string
 }
 
-type Aws struct {
-	Region    string
-	AccessKey string
-	SecretKey string
-	Bucket    string
-}
-
 type EmailSender struct {
 	From string
 }
@@ -42,12 +35,29 @@ type Main struct {
 	InfoEmail string
 }
 
+type Aws struct {
+	Region    string
+	AccessKey string
+	SecretKey string
+	Bucket    string
+}
+
+type YandexMoney struct {
+	ShopId       string
+	Scid         string
+	ShopPassword string
+	Url          string
+	SuccessUrl   string
+	FailUrl      string
+}
+
 type Config struct {
 	Frontend
 	Backend
 	Db
-	Aws
 	EmailSender
+	YandexMoney
+	Aws
 	Main
 }
 

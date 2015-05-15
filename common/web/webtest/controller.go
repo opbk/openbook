@@ -9,29 +9,35 @@ import (
 	"github.com/gorilla/mux"
 	"gopkg.in/check.v1"
 
-	// "github.com/opbk/openbook/common/model/user"
-	// "github.com/opbk/openbook/common/web/auth"
+	"github.com/opbk/openbook/common/configuration"
+	"github.com/opbk/openbook/common/db"
 )
 
 type ControllerTestSuit struct {
 	server *httptest.Server
-	//authWrapper *AuthWrapper
-	c *check.C
+	c      *check.C
+	router *mux.Router
 }
 
-func (s *ControllerTestSuit) SetUpSuite(c *check.C, router *mux.Router) {
-	//s.authWrapper = NewAuthWrapper(router)
-	s.server = httptest.NewServer(router)
+func (s *ControllerTestSuit) GetRouter() *mux.Router {
+	if s.router == nil {
+		s.router = mux.NewRouter()
+	}
+
+	return s.router
+}
+
+func (s *ControllerTestSuit) SetUpSuite(c *check.C) {
+	config := configuration.LoadConfiguration("")
+	db.InitDbConnection(config.Db.Driver, config.Db.Connection)
+
+	s.server = httptest.NewServer(s.router)
 	s.c = c
 }
 
 func (s *ControllerTestSuit) TearDownSuite(c *check.C) {
 	s.server.Close()
 }
-
-// func (s *ControllerTestSuit) WithUser(u *user.User) {
-// 	s.authWrapper.WithUser(u)
-// }
 
 func (s *ControllerTestSuit) Get(url string) (string, *http.Response) {
 	res, err := http.Get(s.server.URL + url)
@@ -78,25 +84,3 @@ func (s *ControllerTestSuit) Delete(url string) (string, *http.Response) {
 	res.Body.Close()
 	return string(result), res
 }
-
-// type AuthWrapper struct {
-// 	router *mux.Router
-// 	user   *user.User
-// }
-
-// func NewAuthWrapper(router *mux.Router) *AuthWrapper {
-// 	return &AuthWrapper{router: router}
-// }
-
-// func (w *AuthWrapper) WithUser(u *user.User) {
-// 	w.user = u
-// }
-
-// func (w *AuthWrapper) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-// 	if w.user != nil {
-// 		auth.Set(w.user, rw, req)
-// 	}
-
-// 	w.router.ServeHTTP(rw, req)
-// 	w.user = nil
-// }

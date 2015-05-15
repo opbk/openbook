@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"net/http"
 )
@@ -17,6 +18,25 @@ func (r JsonResponse) String() string {
 	}
 
 	return string(js)
+}
+
+type XmlResponse struct {
+	Object interface{}
+}
+
+func (r XmlResponse) String() string {
+	x, err := xml.MarshalIndent(r.Object, "", "  ")
+	if err != nil {
+		return ""
+	}
+
+	return string(x)
+}
+
+func WriteXml(rw http.ResponseWriter, object interface{}) {
+	rw.Header().Add("Content-Type", "text/xml")
+	rw.Write([]byte(xml.Header))
+	fmt.Fprint(rw, XmlResponse{object})
 }
 
 func WriteJson(rw http.ResponseWriter, object interface{}) {

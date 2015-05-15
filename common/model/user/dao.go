@@ -2,10 +2,12 @@ package user
 
 import (
 	"database/sql"
+	"time"
 
 	logger "github.com/cihub/seelog"
 
 	"github.com/opbk/openbook/common/db"
+	sub "github.com/opbk/openbook/common/model/subscription"
 	"github.com/opbk/openbook/common/model/user/address"
 	"github.com/opbk/openbook/common/model/user/subscription"
 )
@@ -28,6 +30,7 @@ func scanRow(scaner db.RowScanner) *User {
 	err := scaner.Scan(&user.Id, &user.Email, &user.Password, &user.Name, &user.Phone, &user.Created, &user.Modified, &user.LastEnter)
 	if err != nil {
 		logger.Errorf("Can't scan row: %s", err)
+		return nil
 	}
 
 	return user
@@ -61,6 +64,10 @@ func FindByEmail(email string) *User {
 
 func (u *User) Subscription() *subscription.UserSubscription {
 	return subscription.FindByUser(u.Id)
+}
+
+func (u *User) Subscribe(s *sub.Subscription) {
+	(&subscription.UserSubscription{*s, u.Id, time.Now().AddDate(0, 1, 0)}).Insert()
 }
 
 func (u *User) Addresses() []*address.Address {

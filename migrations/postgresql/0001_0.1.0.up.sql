@@ -161,3 +161,13 @@ CREATE TABLE book_prices (
 	PRIMARY KEY (book_id, price_type_id)
 );
 CREATE INDEX book_prices_ptid_idx on book_prices (price_type_id);
+
+-- transaction --
+CREATE SEQUENCE auto_id_transactions;
+CREATE TABLE transactions (
+	id INTEGER NOT NULL PRIMARY KEY DEFAULT nextval('auto_id_transactions'),
+	user_id INTEGER,
+	subscription_id INTEGER NOT NULL,
+	status CHARACTER VARYING(250) NOT NULL DEFAULT 'new',
+	payload TEXT
+)

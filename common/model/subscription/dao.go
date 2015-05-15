@@ -13,7 +13,7 @@ const (
 	LIST_ENABLED = "SELECT id, name, description, price, enabled FROM subscriptions WHERE enabled = true"
 	FIND         = "SELECT id, name, description, price, enabled FROM subscriptions WHERE id = $1"
 	INSERT       = "INSERT INTO subscriptions (name, description, price, enabled) VALUES ($1, $2, $3, $4) RETURNING id"
-	UPDATE       = "UPDATE subscriptions SET name = $1, description = $2, price = $3, enabled = $4  WHERE id = $4"
+	UPDATE       = "UPDATE subscriptions SET name = $1, description = $2, price = $3, enabled = $4  WHERE id = $5"
 	DELETE       = "DELETE FROM subscriptions WHERE id = $1"
 )
 
@@ -26,6 +26,7 @@ func scanRow(scaner db.RowScanner) *Subscription {
 	err := scaner.Scan(&subscription.Id, &subscription.Name, &subscription.Description, &subscription.Price, &subscription.Enabled)
 	if err != nil {
 		logger.Errorf("Can't scan row: %s", err)
+		return nil
 	}
 
 	return subscription

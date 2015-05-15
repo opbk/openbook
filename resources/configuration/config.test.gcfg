@@ -12,16 +12,25 @@ uploadpath   = build/frontend/var/lib/openbook/frontend/upload
 httpport     = 8090
 templatepath = resources/backend/templates/
 
+[emailsender]
+from = noreply@opbook.org
+
 [aws]
 region = eu-west-1
 accesskey = 
 secretkey = 
 
-[emailsender]
-from = noreply@opbook.org
+[yandexmoney]
+shopid = 
+scid   = 
+shoppassword = 
+url = 
+successurl = 
+failurl = 
 
 [main]
 logfile = ./build/frontend/etc/openbook/frontend/seelog.xml
 maxproc = 8
 domain = opbook.org
 infoemail = info@opbook.org
+
