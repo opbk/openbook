@@ -38,8 +38,10 @@ func (s *Order) Validate() {
 		s.Errors["Address"] = errors.New("Выбранный адрес не найден")
 	}
 
-	subscription := subscription.Find(s.Subscription)
-	if subscription == nil {
-		s.Errors["Subscription"] = errors.New("Выбранная модель подписки не найдена")
+	if s.Subscription != 0 {
+		subscription := subscription.Find(s.Subscription)
+		if subscription == nil {
+			s.Errors["Subscription"] = errors.New("Выбранная модель подписки не найдена")
+		}
 	}
 }

@@ -7,6 +7,7 @@ const (
 	INPROGRESS = "inprogress"
 	DELIVERED  = "delivered"
 	ONHAND     = "onhand"
+	RETURNING  = "returning"
 	RETURNED   = "returned"
 )
 

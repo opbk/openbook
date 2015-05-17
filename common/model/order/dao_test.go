@@ -48,13 +48,24 @@ func (s *TestSuit) TestFind(c *check.C) {
 }
 
 func (s *TestSuit) TestListByUserWithLimit(c *check.C) {
-	orders := ListByUserWithLimit(1, 10, 0)
+	orders := ListByUserAndStatusWithLimit(1, "", 10, 0)
 	c.Assert(orders[0].Id, check.Equals, int64(2))
 	c.Assert(orders[1].Id, check.Equals, int64(1))
 	c.Assert(len(orders), check.Equals, 2)
 }
 
+func (s *TestSuit) TestListByUserAndStatusWithLimit(c *check.C) {
+	orders := ListByUserAndStatusWithLimit(1, INPROGRESS, 10, 0)
+	c.Assert(orders[0].Id, check.Equals, int64(2))
+	c.Assert(len(orders), check.Equals, 1)
+}
+
 func (s *TestSuit) TestCountByUser(c *check.C) {
-	count := CountByUser(1)
+	count := CountByUserAndStatus(1, "")
 	c.Assert(count, check.Equals, 2)
+}
+
+func (s *TestSuit) TestCountByUserAndStatus(c *check.C) {
+	count := CountByUserAndStatus(1, INPROGRESS)
+	c.Assert(count, check.Equals, 1)
 }

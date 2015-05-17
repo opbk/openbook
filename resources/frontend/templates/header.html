@@ -55,9 +55,29 @@
 						<span class="pull-right top-crumb dropdown" dropdown>
 							<a href class="dropdown-toggle" dropdown-toggle><b>Привет, {% if .user.Name %}{% .user.Name %}{% else %}Юзернейм{% end %}!</b></a>
 							<ul class="dropdown-menu">
-					        <li>
-					        	<a href="/user/me/history">История заказов</a>
-					        </li>
+							<li>
+								<a href="/order/history">История заказов</a>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<span>
+									{% if gt $.ordersOnhand 0 %}
+										У Вас <a href="/order/history?s=onhand">{% $.ordersOnhand %} {% ending $.ordersOnhand "книг" "книга" "книги" %}</a> на руках
+									{% else %}
+										У Вас нет ни одной книги на руках
+									{% end %}
+								</span>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<span>
+									{% if $.subscription %}
+										У вас оформленна {% $.subscription.Name %} до {% $.subscription.Expiration.Format "01.02.2006" %}. <a href="/user/me/subscribe/{% $.subscription.Id %}">Продлить</a>
+									{% else %}
+										Подписка не оформленна
+									{% end %}
+								</span>
+							</li>
 					      </ul>
 						</span>
 					{% end %}

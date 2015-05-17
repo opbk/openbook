@@ -1,12 +1,14 @@
 package controller
 
 import (
+	"encoding/json"
 	"html/template"
 	"math"
 	"net/http"
 	"path"
 
 	"github.com/opbk/openbook/common/configuration"
+	"github.com/opbk/openbook/common/model/order"
 	"github.com/opbk/openbook/common/model/user"
 	"github.com/opbk/openbook/common/web"
 	"github.com/opbk/openbook/common/web/auth"
@@ -33,6 +35,27 @@ var tfns = template.FuncMap{
 		m[key] = value
 		return ""
 	},
+	"json": func(o interface{}) string {
+		bytes, _ := json.Marshal(o)
+		return string(bytes)
+	},
+	"ending": func(count int, options ...string) string {
+		index := count % 100
+		if index >= 11 && index <= 14 {
+			index = 0
+		} else {
+			index = index % 10
+			if index < 5 {
+				if index > 2 {
+					index = 2
+				}
+			} else {
+				index = 0
+			}
+		}
+
+		return options[index]
+	},
 }
 
 type FrontendController struct {
@@ -52,6 +75,7 @@ func (c *FrontendController) ExecuteTemplate(rw http.ResponseWriter, req *http.R
 	params["user"] = user
 	if user != nil {
 		params["subscription"] = user.Subscription()
+		params["ordersOnhand"] = order.CountByUserAndStatus(user.Id, order.ONHAND)
 	}
 
 	params["location"] = req.URL.String()

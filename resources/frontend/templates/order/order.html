@@ -1,7 +1,7 @@
 {% define "order" %}
 	{% template "header" . %}
 		<div class="content order" ng-controller="OrderController">
-			<form method="post" action="/order">
+			<form method="post" action="/order/book/{% $.form.Book %}">
 				<span ng-init="form = {
 					book: {% $.form.Book %},
 					name: '{% $.form.Name %}',

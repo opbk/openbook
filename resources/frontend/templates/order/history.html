@@ -13,6 +13,8 @@
 							<span class="text-primary">Доставляется</span>
 						{% else if eq $order.Status "onhand" %}
 							<span class="text-danger">На руках</span>
+						{% else if eq $order.Status "returning" %}
+							<span class="text-warning">Возвращяется</span>
 						{% else if eq $order.Status "returned" %}
 							<span  class="text-muted">Возвращен</span>
 						{% end %}
@@ -42,12 +44,17 @@
 							</div>
 						</div>
 						<div class="col-xs-4">
-							{% $address := index $.addresses $order.AddressId %}
-							{% if $address %}
-								Адрес доставки и комментарии: {% $address.Address %}{% if $address.Comment %}, <i>{% $address.Comment %}</i>{% end %}
-							{% else %}
-								Адрес доставки и комментарии: самовывоз
-							{% end %}
+							<div>
+								{% $address := index $.addresses $order.AddressId %}
+								{% if $address %}
+									Адрес доставки и комментарии: {% $address.Address %}{% if $address.Comment %}, <i>{% $address.Comment %}</i>{% end %}
+								{% else %}
+									Адрес доставки и комментарии: самовывоз
+								{% end %}
+							</div>
+							<div class="buttons">
+								<a class="btn btn-danger btn-sm" ng-click="return({% $order.Id %})" role="button">Здать книгу</a>
+							</div>
 						</div>
 					</div>
 				</div>

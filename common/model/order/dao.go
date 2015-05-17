@@ -9,13 +9,17 @@ import (
 )
 
 const (
-	LIST_BY_USER   = "SELECT id, book_id, user_id, address_id, status, comment, created, modified FROM orders LEFT JOIN book_orders ON order_id = id WHERE user_id = $1 ORDER BY created DESC LIMIT $2 OFFSET $3"
-	COUNT_BY_USER  = "SELECT COUNT(*) FROM orders WHERE user_id = $1"
 	FIND           = "SELECT id, book_id, user_id, address_id, status, comment, created, modified FROM orders LEFT JOIN book_orders ON order_id = id WHERE id = $1"
 	INSERT         = "INSERT INTO orders (user_id, address_id, status, comment) VALUES ($1, $2, $3, $4) RETURNING id"
 	UPDATE         = "UPDATE orders SET user_id = $1, address_id = $2, status = $3, comment = $4 WHERE id = $5"
 	DELETE         = "DELETE FROM orders WHERE id = $1"
 	ADD_ORDER_BOOK = "INSERT INTO book_orders (order_id, book_id) VALUES ($1, $2)"
+
+	LIST_BY_USER  = "SELECT id, book_id, user_id, address_id, status, comment, created, modified FROM orders LEFT JOIN book_orders ON order_id = id WHERE user_id = $1 ORDER BY created DESC LIMIT $2 OFFSET $3"
+	COUNT_BY_USER = "SELECT COUNT(*) FROM orders WHERE user_id = $1"
+
+	LIST_BY_USER_STATUS  = "SELECT id, book_id, user_id, address_id, status, comment, created, modified FROM orders LEFT JOIN book_orders ON order_id = id WHERE user_id = $1 and status = $2 ORDER BY created DESC LIMIT $3 OFFSET $4"
+	COUNT_BY_USER_STATUS = "SELECT COUNT(*) FROM orders WHERE user_id = $1 and status = $2"
 )
 
 func connection() *sql.DB {
@@ -51,8 +55,16 @@ func interateRowsToMap(rows *sql.Rows) map[int64]*Order {
 	return orders
 }
 
-func ListByUserWithLimit(id int64, limit, offset int) []*Order {
-	rows, err := connection().Query(LIST_BY_USER, id, limit, offset)
+func ListByUserAndStatusWithLimit(id int64, status string, limit, offset int) []*Order {
+	var rows *sql.Rows
+	var err error
+
+	if status != "" {
+		rows, err = connection().Query(LIST_BY_USER_STATUS, id, status, limit, offset)
+	} else {
+		rows, err = connection().Query(LIST_BY_USER, id, limit, offset)
+	}
+
 	if err != nil {
 		logger.Errorf("Database error while getting list of orders by user: %s", err)
 	}
@@ -60,9 +72,16 @@ func ListByUserWithLimit(id int64, limit, offset int) []*Order {
 	return interateRows(rows)
 }
 
-func CountByUser(id int64) int {
+func CountByUserAndStatus(id int64, status string) int {
 	var count int
-	err := connection().QueryRow(COUNT_BY_USER, id).Scan(&count)
+	var err error
+
+	if status != "" {
+		err = connection().QueryRow(COUNT_BY_USER_STATUS, id, status).Scan(&count)
+	} else {
+		err = connection().QueryRow(COUNT_BY_USER, id).Scan(&count)
+	}
+
 	if err != nil {
 		logger.Errorf("Database error while getting count of orders by user: %s", err)
 	}
@@ -101,6 +120,11 @@ func (o *Order) insert() {
 	if err != nil {
 		logger.Errorf("Database error while inserting order: %s", err)
 	}
+}
+
+func (o *Order) Return() {
+	o.Status = RETURNING
+	o.Save()
 }
 
 func (o *Order) Delete() {

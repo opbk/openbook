@@ -55,7 +55,3 @@ func (s *YandexControllerTestSuite) TestPaymentInvalidSignature(c *check.C) {
 	res, _ := s.Post("/payment/yandex/payment", "")
 	c.Assert(res, check.Matches, "(?Us).*paymentAvisoResponse.*code=\"1\".*")
 }
-
-func (s *YandexMoneyController) TestCheckPaymentError(c *check.C) {
-	customerNumber=1&sumCurrency=10643&&shopSumCurrencyPaycash=10643&orderSumAmount=490.00&shopId=35545&action=checkOrder&orderCreatedDatetime=2015-04-02T14%3A12%3A38.798%2B03%3A00&shopSumBankPaycash=1003&requestDatetime=2015-04-02T14%3A12%3A46.151%2B03%3A00&shopSumAmount=38.00&orderSumCurrencyPaycash=10643&orderSumBankPaycash=1003&invoiceId=2000000440348&paymentType=PC&&paymentPayerCode=4100322344779&orderNumber=75f105ea-998c-4600-8f0d-0d87b9d4a90a&md5=10DF35BF3E9225A6169B39090CC4C01E
-}

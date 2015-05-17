@@ -36,9 +36,11 @@ func NewOrderController() *OrderController {
 
 func (c *OrderController) Routes(router *mux.Router) {
 	router.HandleFunc("/order", auth.UserRequired(c.Order)).Methods("POST")
+	router.HandleFunc("/order/{id:[0-9]+}/return", auth.UserRequired(c.Return)).Methods("GET")
 	router.HandleFunc("/order/{id:[0-9]+}", auth.UserRequired(c.Delete)).Methods("DELETE")
 	router.HandleFunc("/order/book/{bookId:[0-9]+}", auth.UserRequired(c.Order))
-	router.HandleFunc("/user/me/history", auth.UserRequired(c.History))
+	router.HandleFunc("/order/history", auth.UserRequired(c.History))
+	router.HandleFunc("/order/history/{id:[0-9]+}", auth.UserRequired(c.History))
 }
 
 func (c *OrderController) Order(rw http.ResponseWriter, req *http.Request) {
@@ -64,11 +66,12 @@ func (c *OrderController) Order(rw http.ResponseWriter, req *http.Request) {
 			if user.Subscription() == nil && f.Subscription != 0 {
 				http.Redirect(rw, req, fmt.Sprintf("/user/me/subscribe/%d", f.Subscription), http.StatusFound)
 			} else {
-				http.Redirect(rw, req, "/user/me/history", http.StatusFound)
+				http.Redirect(rw, req, "/order/history", http.StatusFound)
 			}
 			return
 		}
 	}
+	fmt.Println(f.Errors)
 
 	book := book.Find(request.GetInt64("bookId", 0))
 	if book == nil {
@@ -101,9 +104,16 @@ func (c *OrderController) Order(rw http.ResponseWriter, req *http.Request) {
 func (c *OrderController) History(rw http.ResponseWriter, req *http.Request) {
 	request := web.NewRequest(req)
 
+	status := request.GetString("s")
 	limit := request.GetInt("l", defaultLimitPerPage)
 	offset := request.GetInt("f")
-	orders := order.ListByUserWithLimit(c.getUser(req).Id, limit, offset)
+
+	orders := make([]*order.Order, 0)
+	if id := request.GetInt64("id"); id != 0 {
+		orders = append(orders, order.Find(id))
+	} else {
+		orders = order.ListByUserAndStatusWithLimit(c.getUser(req).Id, status, limit, offset)
+	}
 
 	booksId := make([]int64, len(orders))
 	for i, o := range orders {
@@ -141,17 +151,29 @@ func (c *OrderController) History(rw http.ResponseWriter, req *http.Request) {
 			"publishers": publishers,
 		},
 		"pagination": map[string]int{
-			"total":  order.CountByUser(c.getUser(req).Id),
+			"total":  order.CountByUserAndStatus(c.getUser(req).Id, status),
 			"limit":  limit,
 			"offset": offset,
 		},
 	})
 }
 
+func (c *OrderController) Return(rw http.ResponseWriter, req *http.Request) {
+	request := web.NewRequest(req)
+	if o := order.Find(request.GetInt64("id", 0)); o != nil {
+		if o.Status == order.ONHAND && o.UserId == c.getUser(req).Id {
+			o.Return()
+			return
+		}
+	}
+
+	web.NotFound(rw)
+}
+
 func (c *OrderController) Delete(rw http.ResponseWriter, req *http.Request) {
 	request := web.NewRequest(req)
 	if o := order.Find(request.GetInt64("id", 0)); o != nil {
-		if o.Status == order.NEW {
+		if o.Status == order.NEW && o.UserId == c.getUser(req).Id {
 			o.Delete()
 			return
 		}

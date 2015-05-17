@@ -67,7 +67,15 @@ func (u *User) Subscription() *subscription.UserSubscription {
 }
 
 func (u *User) Subscribe(s *sub.Subscription) {
-	(&subscription.UserSubscription{*s, u.Id, time.Now().AddDate(0, 1, 0)}).Insert()
+	oldsubsc := u.Subscription()
+	var expiration time.Time
+	if oldsubsc.Expiration.Before(time.Now()) {
+		expiration = time.Now().AddDate(0, 1, 0)
+	} else {
+		expiration = oldsubsc.Expiration.AddDate(0, 1, 0)
+	}
+
+	(&subscription.UserSubscription{*s, u.Id, expiration}).Insert()
 }
 
 func (u *User) Addresses() []*address.Address {
