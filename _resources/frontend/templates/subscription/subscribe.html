@@ -1,0 +1,19 @@
+{% define "subscribe" %}
+	{% template "header" . %}
+		<h3 class="text-center">Сейчас вы будете перенаправлены на сайт Яндекс.Деньги</h3>
+		<form id="yandex" name="yandex" action="{% $.yandex.Url %}" method="post"> 
+			<input type="hidden" name="shopSuccessURL" value="{% $.yandex.SuccessUrl %}" type="input">
+			<input type="hidden" name="shopFailURL" value="{% $.yandex.FailUrl %}" type="input">
+			<input type="hidden" name="shopId" value="{% $.yandex.ShopId %}" type="input"/>
+			<input type="hidden" name="scid" value="{% $.yandex.Scid %}" type="input"/> 
+			<input type="hidden" name="customerNumber" value="{% $.transaction.UserId %}" type="input"/>
+			<input type="hidden" name="orderNumber" value="{% $.transaction.Id %}" type="input"/>
+			<input type="hidden" name="sum" value="{% $.s.Price %}" type="input">
+		</form>
+		<script>
+			window.setTimeout(function() {
+				document.getElementById('yandex').submit();
+			}, 2000);
+		</script>
+	{% template "footer" %}
+{% end %}

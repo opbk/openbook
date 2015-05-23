@@ -45,7 +45,6 @@ func main() {
 	runtime.GOMAXPROCS(config.Main.MaxProc)
 	initLogging(config)
 	initDataBases(config)
-
 	mail.InitMailSender(config)
 
 	router := mux.NewRouter()

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ $# -ne 2 ]; then
+   cat << EOF
+Usage: run postgres postgres://user[:password]@host/dbname
+EOF
+	exit 1
+fi
+
+case $1 in 
+	"postgres" )
+		/usr/lib/newsgun/migrations/migrate -url $2 -path /usr/lib/newsgun/migrations/postgresql up
+	;;
+esac
+

@@ -1,0 +1,93 @@
+{% define "history" %}
+	{% template "header" . %}
+		<div class="content history" ng-controller="HistoryController">
+			{% range $index, $order := $.orders %}
+				{% if eq $index 0 %}<span ng-init="book_show[{% $order.Id %}]=true"></span>{% end %}
+				{% $book := index $.books.books $order.BookId %}
+				<div class="row panel panel-default" ng-hide="order_hide[{% $order.Id %}]">
+					<div class="panel-heading">
+						№ {% $order.Id %} от {% $order.Created.Format "2.1.2006" %}.
+						{% if eq $order.Status "new" %}
+							<span class="text-primary">Проверяется</span>
+						{% else if eq $order.Status "inprogress" %}
+							<span class="text-primary">Доставляется</span>
+						{% else if eq $order.Status "onhand" %}
+							<span class="text-danger">На руках</span>
+						{% else if eq $order.Status "returning" %}
+							<span class="text-warning">Возвращяется</span>
+						{% else if eq $order.Status "returned" %}
+							<span  class="text-muted">Возвращен</span>
+						{% end %}
+						{% if eq $order.Status "new" %}
+							<span class="glyphicon glyphicon-remove pull-right" aria-hidden="true" title="Отказаться от заказа" ng-click="delete({% $order.Id %})"></span> 
+						{% end %}
+						<span class="glyphicon glyphicon-circle-arrow-down pull-right" aria-hidden="true" title="Подробности заказа" ng-click="book_show[{% $order.Id %}]=true" ng-hide="book_show[{% $order.Id %}]"></span>
+						<span class="glyphicon glyphicon-circle-arrow-up pull-right" aria-hidden="true" title="Скрыть подробности" ng-click="book_show[{% $order.Id %}]=false" ng-show="book_show[{% $order.Id %}]"></span>
+					</div>
+					<div class="panel-body" ng-show="book_show[{% $order.Id %}]">
+						<div class="col-xs-8 order-book">
+							<div class="cover pull-left">
+								<img src="/upload/cover/preview/{% $book.Id %}.jpg" class="cover">
+							</div>
+							<div class="meta">
+								<div class="title"><a href="/book/{% $book.Id %}?c={% $.category %}">{% $book.Title %}</a></div>
+								<div>Автор{% if gt (len $book.AuthorsId) 1 %}ы{% end %}: 
+									{% range $index, $authorId := $book.AuthorsId %}
+										{% if gt (len $book.AuthorsId) 1 %}
+											{% if eq (len $book.AuthorsId) (add $index 1) %} и {% else if $index %}, {% end %}
+										{% end %}
+										<a href="/search?a={% $authorId %}"><b>{% (index $.books.authors $authorId).Name %}</b></a>
+									{% end %}
+								</div>
+								<div>Издательство: <a href="/search?p={% $book.PublisherId %}"><b>{% (index $.books.publishers $book.PublisherId).Name %}</b></a></div>
+								<div>Дата выхода: {% $book.Release.Format "2.1.2006" %}</div>
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div>
+								{% $address := index $.addresses $order.AddressId %}
+								{% if $address %}
+									Адрес доставки и комментарии: {% $address.Address %}{% if $address.Comment %}, <i>{% $address.Comment %}</i>{% end %}
+								{% else %}
+									Адрес доставки и комментарии: самовывоз
+								{% end %}
+							</div>
+							{% if eq $order.Status "onhand" %}
+								<div class="buttons">
+									<a class="btn btn-danger btn-sm" ng-click="return({% $order.Id %})" role="button">Здать книгу</a>
+								</div>
+							{% end %}
+						</div>
+					</div>
+				</div>
+			{% end %}
+		</div>
+		<div class="row">
+			<div class="col-xs-12 paging">
+				<nav class="text-center">
+					<ul class="pagination pagination-sm">
+						{% if eq $.pagination.offset 0 %}
+							<li class="disabled"><span aria-hidden="true">&laquo;</span></li>
+						{% else %}
+							<li><a href="/user/me/history?f={% sub $.pagination.offset $.pagination.limit %}&l={% $.pagination.limit %}" class="disabled"><span aria-hidden="true">&laquo;</span></a></li>
+						{% end %}
+						{% $pagination := (pagination .pagination.total .pagination.limit) %}
+						{% range $index, $val := $pagination %}
+							{% if eq $val.offset $.pagination.offset %}
+								<li class="active"><span>{% $val.page %}</span></li>
+							{% else %}
+								<li><a href="/user/me/history?f={% $val.offset %}&l={% $.pagination.limit %}">{% add $index 1 %}</a></li>
+							{% end %}
+						{% end %}
+						{% $lastOffset := (index $pagination (sub (len $pagination) 1)).offset %}
+						{% if eq $.pagination.offset $lastOffset %}
+							<li class="disabled"><span aria-hidden="true">&raquo;</span></li>
+						{% else %}
+							<li><a href="/user/me/history?f={% add $.pagination.offset $.pagination.limit %}&l={% $.pagination.limit %}" class="disabled"><span aria-hidden="true">&raquo;</span></a></li>
+						{% end %}
+					</ul>
+				</nav>
+			</div>
+		</div>
+	{% template "footer" %}
+{% end %}

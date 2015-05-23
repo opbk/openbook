@@ -1,9 +1,0 @@
-<seelog type="sync" minlevel="debug">
-    <outputs formatid="main">
-        <console />
-        <rollingfile formatid="main" type="size" filename="/var/log/openbook/openbook.log" maxsize="100000" maxrolls="5" />
-    </outputs>
-     <formats>
-        <format id="main" format="%Date/%Time [%Level][%FullPath:%Line] %Msg%n"/>
-    </formats>
-</seelog>

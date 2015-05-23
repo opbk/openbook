@@ -1,0 +1,105 @@
+{% define "book" %}
+	{% set . "title" $.book.Title %}
+	{% template "header" . %}
+	{% if gt (len .path) 0 %}
+		<div class="row">
+			<div class="crumb col-xs-12">
+				<a href="/search"><span>Все книги</span></a> : 
+				{% range $index, $category := $.path %}
+					{% if eq (len $.path) (add $index 1) %}
+						<span class="active">{% $category.Name %}</span>
+					{% else %}
+						<a href="/search?c={% $category.Id %}"><span>{% $category.Name %}</span></a> :
+					{% end %}
+				{% end %}
+			</div>
+		</div>
+	{% end %}
+	<div class="row book">
+		<div class="col-xs-3">
+			<img src="/upload/cover/full/{% $.book.Id %}.jpg">
+		</div>
+		<div class="col-xs-9 meta">
+			<h3 class="title">{% $.book.Title %}</h3>
+			<div class="row">
+				<div class="col-xs-7">
+					<div>Автор{% if gt (len $.book.AuthorsId) 1 %}ы{% end %}: 
+						{% range $index, $authorId := $.book.AuthorsId %}
+							{% if gt (len $.book.AuthorsId) 1 %}
+								{% if eq (len $.book.AuthorsId) (add $index 1) %} и {% else if $index %}, {% end %}
+							{% end %}
+							<a href="/search?a={% $authorId %}"><b>{% (index $.authors $authorId).Name %}</b></a>
+						{% end %}
+					</div>
+					<div>Издательство: <a href="/search?p={% $.book.PublisherId %}"><b>{% (index $.publishers $.book.PublisherId).Name %}</b></a></div>
+					<div>Язык: {% $.book.Language %}</div>
+					<div>Страниц: {% $.book.Pages %}</div>
+					<div>Дата выхода: {% $.book.Release.Format "2.1.2006" %}</div>
+					<div class="description">
+						{% html $.book.Short %}
+						<p><a href="#full"><b>Читать полностью</b></a></p>
+					</div>
+				</div>
+				<div class="col-xs-5">
+					<div class="panel panel-default price-panel text-center">
+						<div class="price-box">Розничная цена: {% (index $.prices "retail").Price %}р</div>
+						<div>
+							<a class="btn btn-danger" href="/order/book/{% $.book.Id %}" role="button"><b>Взять книгу до {% $.dueDate.Format "01.02.2006" %}</b></a>
+						</div>
+						{% if $.subscription %}
+						{% else %}
+							<div class="membership-box">
+								<a href="#" ng-click="hideMembership = !hideMembership">Детали подписки:</a>
+								<ul ng-hide="hideMembership">
+									<li>Стоимость базовой подписки: 490 рублей за 30 календарных дней</li>
+									<li>2 недели на возврат книги после окончания срока подписки</li>
+									<li>Сдайте и возьмите новую книгу в любой момент</li>
+									<li><a href="/about">Подробнее</a></li>
+								</ul>
+							</div>
+						{% end %}
+							<!-- <div class="separator">- или -</div>
+							<div>
+								<a class="btn btn-warning" href="/" role="button">Купить за 1000р</a>
+							</div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row review">
+		{% if $.recomendation %}
+			<div class="col-xs-12 description">
+				<h3 class="border-bottom">Рекомендуем так же посмотреть</h3>
+				<div>
+					<slick dots="true" infinite="false" speed="300" slides-to-show="5" slides-to-scroll="5">
+						{% range $index, $book := $.recomendation.book %}
+							<div class="cover">
+								<a href="/book/{% $book.Id %}"><img src="upload/cover/preview/{% $book.Id %}.jpg"></a>
+							</div>
+						{% end %}
+					</slick>
+				</div>
+			</div>
+		{% end %}
+		{% if $.book.ServiceReview %}
+			<div class="col-xs-12 description">
+				<h3 class="border-bottom">Отзыв "Открытой Книги"</h3>
+				<div>{% html $.book.ServiceReview %}</div>
+			</div>
+		{% end %}
+		{% if $.book.Description %}
+			<div class="col-xs-12 description">
+				<h3 class="border-bottom" id="full">От издательства</h3>
+				<div>{% html $.book.Description %}</div>
+			</div>
+		{% end %}
+		{% if $.book.CriticsReview %}
+			<div class="col-xs-12 description">
+				<h3 class="border-bottom">Обзоры критиков</h3>
+				<div>{% html $.book.CriticsReview %}</div>
+			</div>
+		{% end %}
+	</div>
+	{% template "footer" . %}
+{% end %}

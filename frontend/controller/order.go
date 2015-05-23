@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 
@@ -36,6 +37,7 @@ func NewOrderController() *OrderController {
 
 func (c *OrderController) Routes(router *mux.Router) {
 	router.HandleFunc("/order", auth.UserRequired(c.Order)).Methods("POST")
+	router.HandleFunc("/order/{id:[0-9]+}/change", auth.UserRequired(c.Change)).Methods("GET")
 	router.HandleFunc("/order/{id:[0-9]+}/return", auth.UserRequired(c.Return)).Methods("GET")
 	router.HandleFunc("/order/{id:[0-9]+}", auth.UserRequired(c.Delete)).Methods("DELETE")
 	router.HandleFunc("/order/book/{bookId:[0-9]+}", auth.UserRequired(c.Order))
@@ -61,7 +63,7 @@ func (c *OrderController) Order(rw http.ResponseWriter, req *http.Request) {
 			}
 			o.Save()
 			order.AddOrderBook(o.Id, f.Book)
-			c.sendOrderEmail(o.Id)
+			c.orderNotifying(o.Id)
 
 			if user.Subscription() == nil && f.Subscription != 0 {
 				http.Redirect(rw, req, fmt.Sprintf("/user/me/subscribe/%d", f.Subscription), http.StatusFound)
@@ -158,6 +160,17 @@ func (c *OrderController) History(rw http.ResponseWriter, req *http.Request) {
 	})
 }
 
+func (c *OrderController) Change(rw http.ResponseWriter, req *http.Request) {
+	request := web.NewRequest(req)
+	if o := order.Find(request.GetInt64("id", 0)); o != nil {
+		c.changeNotifying(o.Id)
+		c.ExecuteTemplate(rw, req, "change", map[string]interface{}{})
+		return
+	}
+
+	web.NotFound(rw)
+}
+
 func (c *OrderController) Return(rw http.ResponseWriter, req *http.Request) {
 	request := web.NewRequest(req)
 	if o := order.Find(request.GetInt64("id", 0)); o != nil {
@@ -182,25 +195,44 @@ func (c *OrderController) Delete(rw http.ResponseWriter, req *http.Request) {
 	web.NotFound(rw)
 }
 
-func (c *OrderController) sendOrderEmail(orderId int64) {
+func (c *OrderController) orderNotifying(orderId int64) {
 	go func() {
 		o := order.Find(orderId)
 		book := book.Find(o.BookId)
 		user := user.Find(o.UserId)
 		address := address.Find(o.AddressId)
+		date := time.Now().AddDate(0, 0, 1)
 
 		templateFabric := func(name string) string {
 			body := bytes.NewBuffer([]byte{})
-			c.Template().ExecuteTemplate(body, "email_order_user", map[string]interface{}{
+			c.Template().ExecuteTemplate(body, name, map[string]interface{}{
 				"user":    user,
 				"book":    book,
 				"address": address,
 				"domain":  configuration.GetConfig().Main.Domain,
+				"date":    date,
+				"order":   o,
 			})
 			return body.String()
 		}
 
 		mail.SendTo(user.Email, "Информация о сделанном заказе", templateFabric("email_order_user"))
 		mail.SendTo(configuration.GetConfig().Main.InfoEmail, "Поступление нового заказа", templateFabric("email_order_admin"))
+	}()
+}
+
+func (c *OrderController) changeNotifying(orderId int64) {
+	go func() {
+		o := order.Find(orderId)
+		book := book.Find(o.BookId)
+
+		body := bytes.NewBuffer([]byte{})
+		c.Template().ExecuteTemplate(body, "email_order_change", map[string]interface{}{
+			"user":  user.Find(o.UserId),
+			"order": o,
+			"book":  book,
+		})
+
+		mail.SendTo(configuration.GetConfig().Main.InfoEmail, "Запрос на изменение заказа", body.String())
 	}()
 }

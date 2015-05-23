@@ -9,6 +9,7 @@ import (
 )
 
 const (
+	LIST         = "SELECT id, name, description, price, user_id, expiration FROM subscriptions LEFT JOIN user_subscriptions ON id = subscription_id"
 	FIND_BY_USER = "SELECT id, name, description, price, user_id, expiration FROM subscriptions LEFT JOIN user_subscriptions ON id = subscription_id WHERE user_id = $1"
 	INSERT       = "INSERT INTO user_subscriptions (user_id, subscription_id, expiration) VALUES ($1, $2, $3)"
 	DELETE       = "DELETE FROM user_subscriptions WHERE user_id = $1 and subscription_id = $2"
@@ -27,6 +28,24 @@ func scanRow(scaner db.RowScanner) *UserSubscription {
 	}
 
 	return us
+}
+
+func interateRows(rows *sql.Rows) []*UserSubscription {
+	subscriptions := make([]*UserSubscription, 0)
+	for rows.Next() {
+		subscriptions = append(subscriptions, scanRow(rows))
+	}
+
+	return subscriptions
+}
+
+func List() []*UserSubscription {
+	rows, err := connection().Query(LIST)
+	if err != nil {
+		logger.Errorf("Database error while getting list of users subscription: %s", err)
+	}
+
+	return interateRows(rows)
 }
 
 func FindByUser(id int64) *UserSubscription {

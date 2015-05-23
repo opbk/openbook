@@ -1,0 +1,8 @@
+Package: openbook-migrations
+Version: 0.1.0
+Section: misc
+Priority: optional
+Architecture: amd64
+Depends: adduser
+Maintainer: OpenBook <cto@opbook.org>
+Description: openbook-migrations

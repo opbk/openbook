@@ -1,0 +1,39 @@
+{% define "email_order_user" %}
+	{% template "email_header" . %}
+	<td bgcolor="#ffffff" style="padding: 0 30px 0 30px;">
+		<p style="color: #565656;font-family: Georgia,serif;font-size: 15px;line-height: 22px;">
+			Здравствуйте!<br />Только что Вы сделали заказ на сайте OpenBook.
+		</p>
+	</td>
+	<tr><td style="border-top: 1px solid #e9e9e9;"></td></tr>
+	<tr>
+		<td bgcolor="#ffffff" style="padding: 20px 30px 20px 30px;">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-spacing: 0">
+				<tr>
+					<td align="left" valign="middle" width="100" style="padding: 2px 2px 2px 0" ><img src="http://{% $.domain %}/upload/cover/preview/{% $.book.Id %}.jpg" width="100"/></td>		
+					<td align="left" valign="middle" style="color: #565656;font-family: Georgia,serif;font-size: 15px;line-height: 22px;"><b>{% $.book.Title %}</b></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr><td style="border-top: 1px solid #e9e9e9;"></td></tr>
+	<tr>
+		<td bgcolor="#ffffff" style="padding: 20px 30px 20px 30px;"> 
+			<p style="color: #565656;font-family: Georgia,serif;font-size: 15px;line-height: 22px;">
+				Мы доставим его {% $.date.Format "2.1.2006" %} по адресу {% $.address.Address %}. 
+			</p>
+			<p style="color: #565656;font-family: Georgia,serif;font-size: 15px;line-height: 22px;">
+				Если Вы хотите уточнить детали, изменить или отменить заказ, нажмите на кнопку ниже и мы перезвоним Вам в течение часа. 
+			</p>
+			<p align="center" style="color: #565656;font-family: Georgia,serif;font-size: 15px; line-height: 22px;">
+				<a href="http://{% $.domain %}/order/{% $.order.Id %}/change" style="padding: 5px 10px 5px 10px; border: 1px solid #f15c22; background: #f15c22; color: #fff; font-size: 14px; border-radius: 3px; text-decoration: none;">Изменить заказ</a>
+			</p><br />
+			<p style="color: #565656;font-family: Georgia,serif;font-size: 15px;line-height: 22px;">
+				Если у Вас есть книги на руках, не забудьте отдать их курьеру.
+			</p>
+			<p style="color: #565656;font-family: Georgia,serif;font-size: 15px;line-height: 22px;">
+				Спасибо, что читаете с нами. <br />Команда OpenBook
+			</p>
+		</td>
+	{% template "email_footer" %}
+{% end %}

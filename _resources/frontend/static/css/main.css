@@ -1,0 +1,403 @@
+html, body {
+    height: 100%;
+    font-family: 'PT Sans', sans-serif;
+}
+
+body {
+	font-size: 14px;	
+	color: #333333;
+	line-height: 21px;
+}
+
+@media (min-width: 768px) {
+	.container {
+	  width: 970px;
+	  max-width: none !important;
+	}
+}
+
+.dropdown-menu > li > span {
+	display: block;
+	padding: 3px 20px;
+	clear: both;
+	font-weight: 400;
+	line-height: 1.42857143;
+	color: #333;
+	white-space: nowrap;
+}
+
+.panel-default {
+	border: none !important;
+}
+
+.panel-heading .glyphicon {
+	margin-right: 10px;
+	cursor: pointer;
+	font-size: 115%
+}
+
+.container {
+	min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -100px;
+}
+
+.footer {
+	background-color: #fbfbfb;
+	height: 100px;
+}
+
+.footer .cc {
+	margin-top: 10px;
+	color: #c3c3c3;
+}
+
+.pagination>li>a, .pagination>li>span {
+	border: none !important;
+}
+
+.btn-danger {
+	background: #f15c22;
+	border-color: #f15c22;
+}
+
+.btn-danger:hover {
+	background: ##A84018;
+	border-color: ##A84018;
+}
+
+.btn-warning {
+	background: #777;
+	border-color: #777;
+}
+
+.btn-warning:hover {
+	background: #535353;
+	border-color: #535353;
+}
+
+.slick-prev {
+	background: url("../img/scroller_btn_sprite_new.png") no-repeat -3px 0 !important;	
+	width: 30px !important;
+	height: 110px !important;
+	top: 40px !important;
+	left: -7px !important;
+}
+
+.slick-prev:before {
+	content: "" !important;
+}
+
+.slick-next {
+	background: url("../img/scroller_btn_sprite_new.png") no-repeat 0 -330px !important;
+	width: 39px !important;
+	height: 110px !important;
+	top: 40px !important;
+	right: -1px !important;
+}
+
+.slick-next:before {
+	content: "" !important;
+}
+
+.slick-disabled {
+	background: transparent !important;
+	cursor: none !important;
+}
+
+.header {
+	margin: 10px 0 30px 0;
+}
+
+.header a {
+	text-decoration: none;
+}
+
+.header .top-crumb {
+	margin-left: 20px;
+}
+
+.header .main a {
+	padding: 0 5px !important;
+	margin: 28px 10px 0 0;
+	font-weight: bold;
+	font-size: 115%;
+	color: #555;
+}
+
+.header .main a:hover, header .main a:focus {
+	background-color: #fff
+}
+
+.header .search {
+	margin-top: 22px;
+}
+
+.content {
+	margin-bottom: 130px;
+}
+
+.sidebar {
+	padding-top: 10px;
+	padding-bottom: 50px;
+	border-right: 1px solid #dddddd;
+	font-size: 95%;
+}
+
+.sidebar .nav .nav {
+	margin-left: 14px;
+}
+
+.sidebar .active {
+	font-weight: bold;
+}
+
+.sidebar a {
+	display: inline !important;
+	padding: 0 !important;
+}
+
+.sidebar span {
+	color: #333333;
+}
+
+.sidebar span.counter {
+	color: #999999;
+}
+
+.border-bottom {
+	border-bottom: 1px solid #dddddd;
+}
+
+.catalog {
+	padding-top: 5px;
+	min-height: 500px
+}
+
+.crumb {
+	padding: 10px 0 20px 0;
+	margin: 0 15px 0 15px;
+}
+
+.crumb a {
+	font-weight: bold;
+	color: #000;
+	text-decoration: none;
+}
+
+.crumb a:hover {
+	color: #c60;
+}
+
+.crumb .active {
+	font-weight: bold;
+	color: #c60;
+}
+
+.result {
+	padding: 10px 0 20px 0;
+	margin: 0 15px 0 15px;
+}
+
+.result .number {
+	color: #666;
+	font-size: 90%;
+}
+
+.result .cover {
+	position: relative;
+	width: 160px;
+	text-align: center;
+}
+
+.result .title {
+	margin: 0;
+	padding: 0 0 10px 0;
+	font-weight: bold;
+	font-size: 115%;
+}
+
+.result .buttons {
+	margin: -35px 10px 0 0;
+}
+
+.result .buttons>a {
+	font-weight: bold;
+}
+
+.book .full-cover {
+	position: relative;
+	width: 228px;
+	text-align: center;
+	margin-right: 10px
+}
+
+.book {
+	/*font-size: 115%;*/
+}
+
+.book .meta {
+	padding-left: 30px;
+}
+
+.book .meta h3 {
+	margin: 0 0 15px 0 !important;
+	font-weight: bold;
+}
+
+.book .meta .description {
+	margin-top: 20px;
+}
+
+.book .price-panel {
+	background: #f1f1f1;
+	padding: 19px 9px;
+	width: 250px;
+}
+
+.book .price-panel .btn {
+	width: 200px;
+	height: 45px;
+	padding: 11px 0 0 0;
+}
+
+.book .price-panel .price-box {
+	margin-bottom: 15px;
+}
+
+.book .price-panel .membership-box {
+	margin-top: 5px;
+}
+
+.book .price-panel .membership-box ul {
+	text-align: left;
+	margin-top: 5px;
+	padding-left: 24px;
+}
+
+.book .price-panel .membership-box li {
+	margin-bottom: 5px;
+}
+
+.book .price-panel .separator {
+	margin: 15px 0;
+}
+
+.review .cover img {
+	margin: 0 !important;
+}
+
+.review h3 {
+	padding-bottom: 10px;
+	font-size: 125%;
+	font-weight: bold;
+}
+
+.review .description {
+	margin-top: 20px;	
+}
+
+.signup {
+	width: 620px;
+	margin: 10px auto;
+}
+
+.signup h3 {
+	margin-bottom: 15px;
+}
+
+.signup label {
+	font-weight: normal !important;
+}
+
+.signup .row {
+	margin-bottom: 20px;
+}
+
+.signup input[type=email] {
+	width: 300px;
+}
+
+.signup input[type=password] {
+	width: 200px;
+}
+
+.signup input[type=password] {
+	width: 200px;
+}
+
+.signup .radio-inline {
+	margin-left: 15px;
+}
+
+.signup .text-danger {
+	margin: 5px 0 0 0;
+}
+
+.history .buttons {
+	margin: 30px 10px 0 0;
+}
+
+.order h4 {
+	border-bottom: 1px solid #dddddd;
+	margin: 0;
+	padding: 10px 0;
+}
+
+.order td {
+	border: 0px !important;
+}
+
+.order ul {
+	padding-left: 30px;
+	list-style-type: none;
+}
+
+.order ul label {
+	font-weight: normal;
+}
+
+.order-book {
+	margin-bottom: 20px;
+}
+
+.order-book .cover {
+	width: 110px;
+}
+
+.order-book .title {
+	margin: 0;
+	padding: 0 0 10px 0;
+	font-weight: bold;
+	font-size: 110%;
+}
+
+.order-shiping {
+	margin-bottom: 15px;
+}
+
+.order-shiping fieldset {
+	margin: 10px 0 0 0;
+}
+
+.order-shiping label {
+	font-weight: normal !important;
+}
+
+.order-shiping .glyphicon {
+	margin-left: 20px;
+	cursor: pointer;
+}
+
+.order-subscription {
+	margin-bottom: 40px;
+}
+
+.order-subscription p {
+	margin: 10px 0 0 10px;
+}
+
+.info li {
+	margin-bottom: 5px;
+}

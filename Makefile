@@ -1,5 +1,7 @@
 GO = /usr/bin/go
-BUILD_DIR = build
+BUILD_DIR = _build
+RESOURCES_DIR = _resources
+DEB_DIR = _deb
 PROJECT = github.com/opbk/openbook
 VERSION=$(shell cat version)
 
@@ -27,32 +29,35 @@ $(dependencies_paths):
 
 dependencies: $(dependencies_paths)
 
-######## сборка frontend ########
+######## сборка проекта ########
 
 build_frontend: dependencies
 	rm -rf $(BUILD_DIR)/frontend
+
 	$(GO) build -o $(BUILD_DIR)/frontend/usr/lib/openbook/frontend/frontend $(PROJECT)/frontend
+	$(GO) build -o $(BUILD_DIR)/frontend/usr/lib/openbook/utils/subscription-notifyer $(PROJECT)/utils/subscription-notifyer
+
 	mkdir -p $(BUILD_DIR)/frontend/var/lib/openbook/frontend
 	mkdir -p $(BUILD_DIR)/frontend/etc/openbook/frontend/
 	mkdir -p $(BUILD_DIR)/frontend/etc/init.d/
-	cp -r resources/frontend/templates $(BUILD_DIR)/frontend/usr/lib/openbook/frontend
-	cp -r resources/frontend/static $(BUILD_DIR)/frontend/usr/lib/openbook/frontend
-	cp resources/configuration/config.example.gcfg $(BUILD_DIR)/frontend/etc/openbook/frontend/config.gcfg
-	cp resources/configuration/seelog.example.xml $(BUILD_DIR)/frontend/etc/openbook/frontend/seelog.xml
-	cp -r deb/frontend/* $(BUILD_DIR)/frontend/
+	cp -r $(RESOURCES_DIR)/frontend/templates $(BUILD_DIR)/frontend/usr/lib/openbook/frontend
+	cp -r $(RESOURCES_DIR)/frontend/static $(BUILD_DIR)/frontend/usr/lib/openbook/frontend
+	cp $(RESOURCES_DIR)/configuration/config.example.gcfg $(BUILD_DIR)/frontend/etc/openbook/frontend/config.gcfg
+	cp $(RESOURCES_DIR)/configuration/seelog.example.xml $(BUILD_DIR)/frontend/etc/openbook/frontend/seelog.xml
+	cp -r $(DEB_DIR)/frontend/* $(BUILD_DIR)/frontend/
 
 package_frontend: build_frontend
 	sleep 5
 	sed -i s/Version:.*/Version:\ $(VERSION)/g $(BUILD_DIR)/frontend/DEBIAN/control
-	fakeroot dpkg-deb --build build/frontend frontend_$(VERSION)_amd64.deb
+	fakeroot dpkg-deb --build $(BUILD_DIR)/frontend frontend_$(VERSION)_amd64.deb
 
-######## сборка migrations ########
 
 build_migrations: dependencies
 	rm -rf $(BUILD_DIR)/migrations
+
 	mkdir -p $(BUILD_DIR)/migrations/usr/lib/newsgun/
-	cp -r ./migrations $(BUILD_DIR)/migrations/usr/lib/newsgun/
-	cp -r deb/migrations/* $(BUILD_DIR)/migrations
+	cp -r ./_migrations $(BUILD_DIR)/migrations/usr/lib/newsgun/
+	cp -r $(DEB_DIR)/migrations/* $(BUILD_DIR)/migrations
 
 package_migrations: build_migrations
 	sed -i s/Version:.*/Version:\ $(VERSION)/g $(BUILD_DIR)/migrations/DEBIAN/control
@@ -66,7 +71,7 @@ package: package_frontend package_migrations
 ######## тестирование проекта ########
 
 test: 
-	$(eval CONFIG ?= $(shell readlink -e resources/configuration/config.test.gcfg))
+	$(eval CONFIG ?= $(shell readlink -e $(RESOURCES_DIR)/configuration/config.test.gcfg))
 	$(eval C := $(shell readlink -e $(CONFIG)))
 
 	$(GO) test $(PROJECT)/common/model/book -test.config="$(C)"
@@ -90,10 +95,10 @@ test:
 ######## быстрая накатка миграций ########
 
 migrate_up:
-	-migrate -url postgres://developer:developer@localhost/openbook -path ./migrations/postgresql up
+	-migrate -url postgres://developer:developer@localhost/openbook -path ./_migrations/postgresql up
 
 migrate_down:
-	-migrate -url postgres://developer:developer@localhost/openbook -path ./migrations/postgresql down
+	-migrate -url postgres://developer:developer@localhost/openbook -path ./_migrations/postgresql down
 
 migrate: migrate_down migrate_up
 

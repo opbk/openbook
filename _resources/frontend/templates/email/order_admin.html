@@ -1,0 +1,5 @@
+{% define "email_user_admin" %}
+	<p>Привет, Менеджер!</p>
+	<p>К нам поступил заказ от пользователя {% $.user.Name %}, тел.: {% $.user.Phone %}.</p>
+	<p>Заказ номер {% $.order.Id %} на книгу {% $.book.Title %}, мы должныв доставить {% $.date %} по адресу {% $.address.Address %}.</p>
+{% end %}

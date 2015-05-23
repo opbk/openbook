@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+mkdir -p /var/log/openbook/
+chown openbook:openbook /var/log/openbook/
+chmod 0644 /etc/cron.d/openbook-subscription-notifyer
+
+update-rc.d -f openbook-frontend defaults
+service openbook-frontend start &

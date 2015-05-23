@@ -20,9 +20,9 @@ func NewUserController() *UserController {
 }
 
 func (c *UserController) Routes(router *mux.Router) {
-	router.HandleFunc("/user/me/wishlisth", auth.UserRequired(c.WishList))
+	router.HandleFunc("/user/me", auth.UserRequired(c.Me))
 }
 
-func (c *UserController) WishList(rw http.ResponseWriter, req *http.Request) {
-	c.ExecuteTemplate(rw, req, "wishlist", map[string]interface{}{})
+func (c *UserController) Me(rw http.ResponseWriter, req *http.Request) {
+
 }

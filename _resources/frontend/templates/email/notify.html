@@ -1,0 +1,28 @@
+{% define "email_notify" %}
+	{% template "email_header" . %}
+	<td bgcolor="#ffffff" style="padding: 00px 30px 40px 30px;">
+		<p style="color: #565656;font-family: Georgia,serif;font-size: 15px;line-height: 22px;">
+			Здравствуйте! <br />Просто напоминаем, что ровно через неделю закончится Ваша подписка :(
+		</p>
+		<p style="color: #565656;font-family: Georgia,serif;font-size: 15px;line-height: 22px;">
+			Чтобы продолжить получать книги, пожалуйста продлите подписку. Для этого просто нажмите на кнопку ниже. 
+		</p>
+		<p align="center" style="color: #565656;font-family: Georgia,serif;font-size: 15px; line-height: 22px;">
+			<a href="http://{% $.domain %}/user/me/subscribe/{% $.subscription.Id %}" style="padding: 5px 10px 5px 10px; border: 1px solid #f15c22; background: #f15c22; color: #fff; font-size: 14px; border-radius: 3px; text-decoration: none;">Продлить подписку</a>
+		</p><br />
+
+		{% if $.order %}
+			<p style="color: #565656;font-family: Georgia,serif;font-size: 15px;line-height: 22px;">
+				У Вас на руках есть книга <b>{% $.book.Title %}</b>, ee нужно сдать до {% $.returnDate.Format "2.1.2006" %}. 
+				Мы заберем ее в удобное для Вас время совершенно бесплатно. Просто нажмите на кнопку ниже. 
+			</p>
+			<p align="center" style="color: #565656;font-family: Georgia,serif;font-size: 15px; line-height: 22px;">
+				<a href="http://{% $.domain %}/order/history/{% $.order.Id %}" style="padding: 5px 10px 5px 10px; border: 1px solid #f15c22; background: #f15c22; color: #fff; font-size: 14px; border-radius: 3px; text-decoration: none;">Сдать книгу</a>
+			</p><br />
+		{% end %}
+		<p style="color: #565656;font-family: Georgia,serif;font-size: 15px;line-height: 22px;">
+			Спасибо, что читаете с нами. <br />Команда OpenBook
+		</p>
+	</td>
+	{% template "email_footer" %}
+{% end %}

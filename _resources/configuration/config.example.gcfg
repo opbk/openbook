@@ -1,0 +1,35 @@
+[db]
+driver     = postgres
+connection = postgres://developer:developer@localhost/openbook
+
+[frontend]
+httpport     = 8089
+templatepath = _resources/frontend/templates/
+staticpath   = _resources/frontend/static/
+uploadpath   = _build/frontend/var/lib/openbook/frontend/upload
+
+[backend]
+httpport     = 8090
+templatepath = _resources/backend/templates/
+
+[emailsender]
+from = noreply@opbook.org
+
+[aws]
+region = eu-west-1
+accesskey = 
+secretkey = 
+
+[yandexmoney]
+shopid = 35545
+scid   = 60611
+shoppassword = Heavens2H239sla02fDD
+url = https://demomoney.yandex.ru/eshop.xml
+successurl = 
+failurl = 
+
+[main]
+logfile = ./_build/frontend/etc/openbook/frontend/seelog.xml
+maxproc = 8
+domain = opbook.org
+

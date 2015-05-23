@@ -26,7 +26,7 @@ func NewSignUp() *SighUp {
 func (s *SighUp) Validate() {
 	if !s.CheckIfEmpty("Email", s.Email, "Укажите ваш email адрес") {
 		s.User = user.FindByEmail(s.Email)
-		if s.User.Id != 0 && s.New {
+		if s.User != nil && s.New {
 			s.Errors["Email"] = errors.New(fmt.Sprintf("Пользователь %s уже существует", s.Email))
 		}
 	}
@@ -34,9 +34,9 @@ func (s *SighUp) Validate() {
 	if !s.New {
 		if !s.CheckIfEmpty("Password", s.Password, "Укажите ваш пароль") {
 			s.User = user.FindByEmail(s.Email)
-			if s.User.Id != 0 && s.User.Password != s.Password {
+			if s.User != nil && s.User.Password != s.Password {
 				s.Errors["Password"] = errors.New(fmt.Sprintf("Указанный пароль для пользователя %s не подходит", s.Email))
-			} else if s.User.Id == 0 {
+			} else if s.User == nil {
 				s.Errors["Email"] = errors.New(fmt.Sprintf("Пользователь %s не наден", s.Email))
 			}
 		}

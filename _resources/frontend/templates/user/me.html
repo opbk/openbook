@@ -1,0 +1,101 @@
+{% define "me" %}
+	{% template "header" . %}
+		<div class="content" ng-controller="UserController">
+			<span ng-init="form = {
+				name: '{% $.form.Name %}',
+				phone: '{% $.form.Phone %}',
+			}"></span>
+			<span ng-init="addresses = [
+				{% range $index, $address := $.addresses %}
+					{
+						id: {% $address.Id %},
+						address: '{% $address.Address %}',
+						comment: '{% $address.Comment %}'
+					}	
+				{% end %}
+			]"></span>
+			<span ng-init="subscriptions = [
+				{% range $index, $subscription := $.subscriptions %}
+					{
+						id: {% $subscription.Id %},
+						name: '{% $subscription.Name %}',
+						price: {% $subscription.Price %}
+					},
+				{% end %}
+			]"></span>
+			<div class="row panel panel-default order-shiping">
+				<div class="panel-heading"><strong>Личные данные</strong></div>
+				<div class="panel-body">
+					<form method="post" class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Имя:</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control input-sm" placeholder="Имя" name="name" ng-model="form.name">
+							</div>
+							<div class="text-danger col-sm-8" ng-init="form.error.name = '{% $.form.Error "Name" %}'">{{ form.error.name }}</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Телефон:</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control input-sm" placeholder="89161234567" name="phone" ng-model="form.phone">
+							</div>
+							<div class="text-danger col-sm-8" ng-init="form.error.phone = '{% $.form.Error "Phone" %}'">{{ form.error.phone }}</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Новый пароль:</label>
+							<div class="col-sm-4">
+								<input type="password" class="form-control input-sm" name="password" ng-model="form.password">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Повторите новый пароль:</label>
+							<div class="col-sm-4">
+								<input type="password" class="form-control input-sm" name="rpassword" ng-model="form.rpassword">
+							</div>
+							<div class="text-danger col-sm-8" ng-init="form.error.password = '{% $.form.Error "Password" %}'">{{ form.error.password }}</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-3 col-sm-4">
+								<input type="submit" class="btn btn-danger" value="Сохранить" ng-click="submit($event)"> 
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="row panel panel-default order-shiping">
+				<div class="panel-heading"><strong>Адреса доставки</strong></div>
+				<div class="panel-body">
+					<ul>
+						<li ng-repeat="address in addresses">
+							<label class="radio">
+								{{ address.address }}<i ng-if="address.comment">, {{ address.comment }}</i>
+								<span class="glyphicon glyphicon-pencil" aria-hidden="true" title="Редактировать адрес" ng-click=""></span>
+								<span class="glyphicon glyphicon-remove" aria-hidden="true" title="Удалить адрес" ng-click=""></span>
+							</label>
+						</li>
+						<li><a href="#" ng-click="addAddressFlag=true" ng-hide="addAddressFlag || !addresses.length">Добавить новый адрес доставки</a></li>
+					</ul>
+					<fieldset class="form-horizontal" ng-show="addAddressFlag || !addresses.length">
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Укажите желаемый адрес доставки:</label>
+							<div class="col-sm-4">
+								<textarea class="form-control" rows="2" ng-model="address.address"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">И коментарии к адресу:</label>
+							<div class="col-sm-4">
+								<textarea class="form-control" rows="2" ng-model="address.comment"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-3 col-sm-4">
+								<input type="submit" class="btn btn-danger" value="Сохранить" ng-click="submit($event)"> 
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	{% template "footer" %}
+{% end %}

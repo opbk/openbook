@@ -94,14 +94,19 @@ func GetTemplate() *template.Template {
 		path.Join(tPath, "about.html"),
 		path.Join(tPath, "sign", "signup.html"),
 		path.Join(tPath, "user", "wishlist.html"),
+		path.Join(tPath, "user", "me.html"),
 		path.Join(tPath, "book", "search.html"),
 		path.Join(tPath, "book", "book.html"),
 		path.Join(tPath, "order", "order.html"),
 		path.Join(tPath, "order", "history.html"),
+		path.Join(tPath, "order", "change.html"),
 		path.Join(tPath, "subscription", "subscribe.html"),
+		path.Join(tPath, "email", "header.html"),
+		path.Join(tPath, "email", "footer.html"),
 		path.Join(tPath, "email", "signup.html"),
 		path.Join(tPath, "email", "order_user.html"),
 		path.Join(tPath, "email", "order_admin.html"),
+		path.Join(tPath, "email", "order_change.html"),
 	))
 }
 
